@@ -1,1497 +1,1535 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TenderAI — AI Powered Tender Management</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-  <style>
-    :root {
-      --bg: #F5F3EE;
-      --bg2: #ECEAE3;
-      --bg3: #E2DFD6;
-      --surface: #FFFFFF;
-      --border: #D8D5CC;
-      --border2: #C8C4B8;
-      --text: #1A1916;
-      --text2: #5C5A54;
-      --text3: #9C9A94;
-      --accent: #1A1916;
-      --accent2: #2D5016;
-      --green: #3D6B1F;
-      --green-bg: #EAF0E1;
-      --amber: #8B5E0A;
-      --amber-bg: #FDF3DC;
-      --red: #8B1A1A;
-      --red-bg: #FDEAEA;
-      --blue: #1A3D8B;
-      --blue-bg: #E8EEFB;
-      --purple: #4A2D8B;
-      --purple-bg: #EEEAFB;
-      --radius: 10px;
-      --radius-lg: 16px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-lg: 0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TenderAI Pro — AI Tender Management SaaS</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+--bg:#0F1117;--bg2:#161B27;--bg3:#1C2333;--surface:#1E2535;--surface2:#242D40;
+--border:#2A3448;--border2:#334060;
+--text:#E8EDF5;--text2:#8B95A8;--text3:#4A5568;
+--green:#10B981;--green-bg:rgba(16,185,129,0.12);--green-border:rgba(16,185,129,0.25);
+--blue:#3B82F6;--blue-bg:rgba(59,130,246,0.12);--blue-border:rgba(59,130,246,0.25);
+--purple:#8B5CF6;--purple-bg:rgba(139,92,246,0.12);--purple-border:rgba(139,92,246,0.25);
+--amber:#F59E0B;--amber-bg:rgba(245,158,11,0.12);--amber-border:rgba(245,158,11,0.25);
+--red:#EF4444;--red-bg:rgba(239,68,68,0.12);--red-border:rgba(239,68,68,0.25);
+--cyan:#06B6D4;--cyan-bg:rgba(6,182,212,0.12);--cyan-border:rgba(6,182,212,0.25);
+--pink:#EC4899;--pink-bg:rgba(236,72,153,0.12);--pink-border:rgba(236,72,153,0.25);
+--orange:#F97316;--orange-bg:rgba(249,115,22,0.12);--orange-border:rgba(249,115,22,0.25);
+--radius:10px;--radius-lg:16px;--radius-xl:24px;
+--shadow:0 4px 24px rgba(0,0,0,0.4);--shadow-lg:0 8px 40px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-    /* ============ LOGIN PAGE ============ */
-    .login-page { min-height: 100vh; display: flex; }
-    .login-left { flex: 1; background: var(--accent); padding: 48px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
-    .login-left::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.03); }
-    .login-left::after { content: ''; position: absolute; bottom: -80px; left: -80px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.03); }
-    .login-logo { display: flex; align-items: center; gap: 10px; }
-    .login-logo-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .login-logo-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; }
-    .login-hero { z-index: 1; }
-    .login-tagline { font-family: 'DM Serif Display', serif; font-size: 42px; color: #fff; line-height: 1.2; margin-bottom: 20px; }
-    .login-tagline em { font-style: italic; color: rgba(255,255,255,0.6); }
-    .login-desc { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 380px; }
-    .login-features { display: flex; flex-direction: column; gap: 10px; z-index: 1; }
-    .login-feat { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.7); }
-    .login-feat-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; }
-    .login-right { width: 460px; padding: 48px; display: flex; flex-direction: column; justify-content: center; background: var(--surface); }
-    .login-right h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); margin-bottom: 6px; }
-    .login-right p { font-size: 14px; color: var(--text2); margin-bottom: 32px; }
-    .btn-google { width: 100%; padding: 13px 20px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-    .btn-google:hover { background: var(--bg2); border-color: var(--border2); }
-    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-    .divider-line { flex: 1; height: 1px; background: var(--border); }
-    .divider span { font-size: 12px; color: var(--text3); }
-    .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
-    .form-input { width: 100%; padding: 11px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; transition: border-color 0.15s; outline: none; }
-    .form-input:focus { border-color: var(--accent); background: var(--surface); }
-    .btn-primary { width: 100%; padding: 13px 20px; background: var(--accent); border: none; border-radius: var(--radius); font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; }
-    .btn-primary:hover { opacity: 0.85; }
-    .login-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text2); }
-    .login-switch a { color: var(--accent); text-decoration: none; font-weight: 500; cursor: pointer; }
-    .login-error { background: var(--red-bg); color: var(--red); padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 16px; display: none; }
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
 
-    /* ============ APP LAYOUT ============ */
-    .app { display: none; flex-direction: column; min-height: 100vh; }
-    .topnav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
-    .topnav-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); margin-right: 8px; }
-    .topnav-search { flex: 1; max-width: 400px; position: relative; }
-    .topnav-search input { width: 100%; padding: 8px 14px 8px 36px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; }
-    .topnav-search input:focus { border-color: var(--border2); }
-    .topnav-search i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 16px; }
-    .topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-    .notif-btn { width: 34px; height: 34px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text2); position: relative; }
-    .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--red); border: 1.5px solid var(--surface); }
-    .user-avatar { width: 34px; height: 34px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; }
-    .user-menu { position: absolute; top: 44px; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; width: 180px; box-shadow: var(--shadow-lg); display: none; }
-    .user-menu-item { padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-    .user-menu-item:hover { background: var(--bg); }
-    .user-menu-item.danger { color: var(--red); }
+/* ===== LOGIN PAGE ===== */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 50% -20%,rgba(59,130,246,0.15),transparent),radial-gradient(ellipse 60% 60% at 80% 80%,rgba(139,92,246,0.1),transparent);}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.3;}
+.login-box{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:40px;width:420px;box-shadow:var(--shadow-lg);}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;justify-content:center;}
+.login-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.login-logo-name{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);font-weight:700;}
+.login-logo-badge{font-size:10px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);padding:2px 7px;border-radius:20px;font-weight:600;letter-spacing:0.05em;}
+.login-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px;text-align:center;}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px;text-align:center;}
+.btn-google{width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;font-weight:500;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn-google:hover{background:var(--surface2);border-color:var(--blue);}
+.login-divider{display:flex;align-items:center;gap:10px;margin:20px 0;}
+.login-divider-line{flex:1;height:1px;background:var(--border);}
+.login-divider span{font-size:12px;color:var(--text3);}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.08em;}
+.form-input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;transition:border-color 0.2s;outline:none;}
+.form-input:focus{border-color:var(--blue);background:var(--bg2);}
+.form-input::placeholder{color:var(--text3);}
+.btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--radius);font-size:14px;font-weight:600;color:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:opacity 0.2s;}
+.btn-primary:hover{opacity:0.9;}
+.login-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--text2);}
+.login-switch a{color:var(--blue);text-decoration:none;font-weight:600;cursor:pointer;}
+.login-error{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;display:none;}
 
-    /* Tab Nav */
-    .tabnav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; }
-    .tabnav-item { padding: 14px 16px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 7px; transition: all 0.15s; }
-    .tabnav-item:hover { color: var(--text); }
-    .tabnav-item.active { color: var(--text); border-bottom-color: var(--accent); }
-    .tabnav-item i { font-size: 16px; }
+/* ===== APP LAYOUT ===== */
+.app{display:none;min-height:100vh;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform 0.3s;}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sidebar-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.sidebar-logo-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);}
+.sidebar-logo-pro{font-size:9px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;padding:2px 6px;border-radius:20px;font-weight:700;letter-spacing:0.06em;margin-left:4px;}
+.sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;padding:10px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;margin-bottom:2px;position:relative;}
+.nav-item:hover{background:var(--surface);color:var(--text);}
+.nav-item.active{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);}
+.nav-item i{font-size:17px;flex-shrink:0;}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.nb-green{background:var(--green-bg);color:var(--green);}
+.nb-red{background:var(--red-bg);color:var(--red);}
+.nb-purple{background:var(--purple-bg);color:var(--purple);}
+.nb-amber{background:var(--amber-bg);color:var(--amber);}
+.sidebar-footer{padding:12px 10px;border-top:1px solid var(--border);}
+.user-info{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;}
+.user-info:hover{background:var(--surface);}
+.user-avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;color:var(--text);}
+.user-email{font-size:11px;color:var(--text3);}
+.main-area{margin-left:240px;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:99;}
+.topbar-search{flex:1;max-width:380px;position:relative;}
+.topbar-search input{width:100%;padding:8px 14px 8px 36px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+.topbar-search input:focus{border-color:var(--blue-border);}
+.topbar-search input::placeholder{color:var(--text3);}
+.topbar-search i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.icon-btn{width:36px;height:36px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--text2);transition:all 0.15s;position:relative;}
+.icon-btn:hover{border-color:var(--border2);color:var(--text);}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2);}
+.page-content{padding:24px;flex:1;}
 
-    /* Main content */
-    .main-content { padding: 24px; flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; }
+/* ===== TABS ===== */
+.page-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;margin-bottom:24px;width:fit-content;}
+.page-tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+.page-tab:hover{color:var(--text);}
+.page-tab.active{background:var(--surface2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 
-    /* Cards */
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
-    .card-sm { padding: 14px 16px; border-radius: var(--radius); }
+/* ===== PAGE HEADER ===== */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--text2);}
+.header-actions{display:flex;gap:8px;flex-shrink:0;}
 
-    /* Stats Grid */
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; }
-    .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-    .stat-val { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); margin-bottom: 4px; }
-    .stat-delta { font-size: 12px; color: var(--green); }
-    .stat-delta.warn { color: var(--amber); }
-    .stat-delta.danger { color: var(--red); }
+/* ===== BUTTONS ===== */
+.btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;}
+.btn:hover{background:var(--surface2);border-color:var(--border2);}
+.btn-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
+.btn-blue:hover{opacity:0.9;background:var(--blue);}
+.btn-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.btn-purple{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple);}
+.btn-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+.btn-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px;}
+.btn-gradient{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;}
+.btn-gradient:hover{opacity:0.9;background:linear-gradient(135deg,var(--blue),var(--purple));}
 
-    /* Section headers */
-    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .section-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); }
-    .section-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+/* ===== STAT CARDS ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+.stat-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:0.08;}
+.sc-blue::before{background:var(--blue);}
+.sc-green::before{background:var(--green);}
+.sc-purple::before{background:var(--purple);}
+.sc-amber::before{background:var(--amber);}
+.sc-red::before{background:var(--red);}
+.sc-cyan::before{background:var(--cyan);}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.si-blue{background:var(--blue-bg);color:var(--blue);}
+.si-green{background:var(--green-bg);color:var(--green);}
+.si-purple{background:var(--purple-bg);color:var(--purple);}
+.si-amber{background:var(--amber-bg);color:var(--amber);}
+.si-red{background:var(--red-bg);color:var(--red);}
+.si-cyan{background:var(--cyan-bg);color:var(--cyan);}
+.si-pink{background:var(--pink-bg);color:var(--pink);}
+.stat-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:6px;}
+.stat-val{font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:'Playfair Display',serif;}
+.stat-delta{font-size:12px;display:flex;align-items:center;gap:4px;}
+.delta-up{color:var(--green);}
+.delta-down{color:var(--red);}
+.delta-neutral{color:var(--text3);}
 
-    /* Buttons */
-    .btn { padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
-    .btn:hover { background: var(--bg); }
-    .btn-dark { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .btn-dark:hover { opacity: 0.85; background: var(--accent); }
-    .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
-    .btn-green { background: var(--green-bg); color: var(--green); border-color: transparent; }
-    .btn-red { background: var(--red-bg); color: var(--red); border-color: transparent; }
+/* ===== CARDS ===== */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:700;color:var(--text);}
+.card-sub{font-size:12px;color:var(--text2);margin-top:2px;}
 
-    /* Badges */
-    .badge { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; display: inline-block; }
-    .badge-new { background: var(--blue-bg); color: var(--blue); }
-    .badge-progress { background: var(--purple-bg); color: var(--purple); }
-    .badge-review { background: var(--amber-bg); color: var(--amber); }
-    .badge-submitted { background: var(--green-bg); color: var(--green); }
-    .badge-won { background: var(--green-bg); color: var(--green); border: 1px solid #97C459; }
-    .badge-lost { background: var(--red-bg); color: var(--red); }
-    .badge-urgent { background: var(--red-bg); color: var(--red); }
-    .badge-ai { background: var(--purple-bg); color: var(--purple); }
+/* ===== BADGES ===== */
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.badge-new{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);}
+.badge-progress{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);}
+.badge-review{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.badge-submitted{background:var(--cyan-bg);color:var(--cyan);border:1px solid var(--cyan-border);}
+.badge-won{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.badge-lost{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+.badge-urgent{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+.badge-ai{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);}
+.badge-high{background:var(--green-bg);color:var(--green);}
+.badge-med{background:var(--amber-bg);color:var(--amber);}
+.badge-low{background:var(--red-bg);color:var(--red);}
 
-    /* Tender Cards */
-    .tender-list { display: flex; flex-direction: column; gap: 10px; }
-    .tender-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; cursor: pointer; transition: all 0.15s; }
-    .tender-card:hover { border-color: var(--border2); box-shadow: var(--shadow); transform: translateY(-1px); }
-    .tender-card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 12px; }
-    .tender-title { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; line-height: 1.4; }
-    .tender-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text3); margin-bottom: 10px; flex-wrap: wrap; }
-    .tender-meta span { display: flex; align-items: center; gap: 4px; }
-    .ai-score-bar { background: var(--bg); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
-    .score-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-    .score-high { background: var(--green-bg); color: var(--green); }
-    .score-med { background: var(--amber-bg); color: var(--amber); }
-    .score-low { background: var(--red-bg); color: var(--red); }
-    .score-text { flex: 1; color: var(--text2); line-height: 1.4; }
-    .tender-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+/* ===== TENDER CARDS ===== */
+.tender-list{display:flex;flex-direction:column;gap:10px;}
+.tender-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.tender-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0;}
+.tc-blue::before{background:var(--blue);}
+.tc-green::before{background:var(--green);}
+.tc-amber::before{background:var(--amber);}
+.tc-red::before{background:var(--red);}
+.tc-purple::before{background:var(--purple);}
+.tender-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow);}
+.tc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px;}
+.tc-title{font-size:14px;font-weight:600;color:var(--text);flex:1;line-height:1.4;}
+.tc-badges{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;}
+.tc-meta{display:flex;gap:16px;font-size:12px;color:var(--text2);margin-bottom:12px;flex-wrap:wrap;}
+.tc-meta span{display:flex;align-items:center;gap:4px;}
+.tc-meta i{font-size:14px;}
+.ai-bar{background:var(--bg3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.score-pill{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.sp-high{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.sp-med{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.sp-low{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+.ai-text{flex:1;font-size:12px;color:var(--text2);line-height:1.5;}
+.score-bar-wrap{width:80px;}
+.score-bar-track{height:4px;background:var(--bg2);border-radius:2px;}
+.score-bar-fill{height:100%;border-radius:2px;transition:width 0.5s;}
+.sbf-high{background:linear-gradient(90deg,var(--green),#34D399);}
+.sbf-med{background:linear-gradient(90deg,var(--amber),#FCD34D);}
+.sbf-low{background:linear-gradient(90deg,var(--red),#F87171);}
+.tc-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
 
-    /* Upload Zone */
-    .upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius-lg); padding: 40px; text-align: center; cursor: pointer; transition: all 0.15s; background: var(--bg); }
-    .upload-zone:hover { border-color: var(--accent); background: var(--bg2); }
-    .upload-zone i { font-size: 40px; color: var(--text3); margin-bottom: 12px; display: block; }
-    .upload-zone h3 { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
-    .upload-zone p { font-size: 13px; color: var(--text3); }
+/* ===== AI THINKING ===== */
+.ai-thinking{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--purple);}
+.ai-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--purple);animation:pulse 1.2s ease-in-out infinite;margin:0 1px;}
+.ai-dots span:nth-child(2){animation-delay:0.2s;}
+.ai-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,80%,100%{opacity:0.2;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
 
-    /* AI Chat */
-    .chat-container { display: flex; flex-direction: column; height: 500px; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .chat-msg-ai { background: var(--bg); border-radius: 12px 12px 12px 4px; padding: 12px 14px; font-size: 13px; color: var(--text); line-height: 1.6; max-width: 85%; }
-    .chat-msg-user { background: var(--accent); border-radius: 12px 12px 4px 12px; padding: 12px 14px; font-size: 13px; color: #fff; line-height: 1.6; max-width: 85%; align-self: flex-end; }
-    .chat-input-area { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 8px; }
-    .chat-input { flex: 1; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; }
-    .chat-input:focus { border-color: var(--border2); }
+/* ===== KANBAN ===== */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kanban-col{background:var(--bg3);border-radius:var(--radius-lg);padding:14px;}
+.kanban-col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.kanban-col-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:7px;}
+.kcth{width:8px;height:8px;border-radius:50%;}
+.kcth-blue{background:var(--blue);}
+.kcth-purple{background:var(--purple);}
+.kcth-amber{background:var(--amber);}
+.kcth-cyan{background:var(--cyan);}
+.kcth-green{background:var(--green);}
+.kanban-count{font-size:11px;font-weight:700;background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:20px;color:var(--text2);}
+.kanban-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;}
+.kanban-card:hover{border-color:var(--border2);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.kc-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.4;}
+.kc-meta{font-size:11px;color:var(--text3);}
+.kc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 
-    /* Document cards */
-    .doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .doc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: all 0.15s; }
-    .doc-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: var(--shadow); }
-    .doc-card-icon { font-size: 24px; margin-bottom: 8px; }
-    .doc-card-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-    .doc-card-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
-    .doc-card-time { font-size: 11px; color: var(--green); margin-top: 6px; }
+/* ===== DOCUMENT GRID ===== */
+.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.doc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.2s;}
+.doc-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow);}
+.doc-card.selected{border-color:var(--blue);background:var(--blue-bg);}
+.doc-icon{font-size:28px;margin-bottom:10px;}
+.doc-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.doc-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
+.doc-time{font-size:11px;color:var(--green);font-weight:500;}
 
-    /* Letter format selector */
-    .format-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 16px 0; }
-    .format-card { border: 2px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: all 0.15s; }
-    .format-card:hover { border-color: var(--border2); }
-    .format-card.selected-lh { border-color: var(--blue); background: var(--blue-bg); }
-    .format-card.selected-es { border-color: var(--amber); background: var(--amber-bg); }
-    .format-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-    .format-card-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+/* ===== FORMAT SELECTOR ===== */
+.format-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.format-card{border:2px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.2s;}
+.format-card:hover{border-color:var(--border2);}
+.format-card.sel-lh{border-color:var(--blue);background:var(--blue-bg);}
+.format-card.sel-es{border-color:var(--amber);background:var(--amber-bg);}
+.format-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.format-desc{font-size:11px;color:var(--text2);line-height:1.6;}
 
-    /* Team */
-    .team-table { width: 100%; border-collapse: collapse; }
-    .team-table th { font-size: 11px; font-weight: 500; color: var(--text3); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; }
-    .team-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); }
-    .team-table tr:last-child td { border-bottom: none; }
-    .team-table tr:hover td { background: var(--bg); }
+/* ===== TABLE ===== */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;font-weight:700;color:var(--text2);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;}
+td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg3);}
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-    .modal-overlay.open { display: flex; }
-    .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; width: 560px; max-width: 90vw; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); }
-    .modal-close { width: 28px; height: 28px; border-radius: 6px; background: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+/* ===== UPLOAD ===== */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:48px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg3);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-bg);}
+.upload-zone i{font-size:48px;color:var(--text3);margin-bottom:14px;display:block;}
+.upload-zone h3{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.upload-zone p{font-size:13px;color:var(--text3);}
 
-    /* Toast */
-    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 12px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { background: var(--green); }
-    .toast.error { background: var(--red); }
+/* ===== PROGRESS ===== */
+.prog-track{height:6px;background:var(--bg2);border-radius:3px;}
+.prog-fill{height:100%;border-radius:3px;transition:width 0.4s;}
+.pf-blue{background:linear-gradient(90deg,var(--blue),#60A5FA);}
+.pf-green{background:linear-gradient(90deg,var(--green),#34D399);}
+.pf-amber{background:linear-gradient(90deg,var(--amber),#FCD34D);}
+.pf-red{background:linear-gradient(90deg,var(--red),#F87171);}
+.pf-purple{background:linear-gradient(90deg,var(--purple),#A78BFA);}
 
-    /* Loading */
-    .loading { display: flex; align-items: center; justify-content: center; padding: 40px; }
-    .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+/* ===== CHAT ===== */
+.chat-wrap{display:flex;flex-direction:column;height:520px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);}
+.chat-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:var(--bg3);}
+.chat-ai{background:var(--surface);border:1px solid var(--border);border-radius:12px 12px 12px 4px;padding:12px 16px;font-size:13px;color:var(--text);line-height:1.7;max-width:85%;}
+.chat-user{background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:12px 12px 4px 12px;padding:12px 16px;font-size:13px;color:#fff;line-height:1.7;max-width:85%;align-self:flex-end;}
+.chat-input-row{border-top:1px solid var(--border);padding:14px 16px;display:flex;gap:10px;background:var(--bg2);}
+.chat-input{flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;}
+.chat-input:focus{border-color:var(--blue);}
 
-    /* AI Analyzing */
-    .ai-analyzing { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--purple); }
-    .ai-dots span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--purple); animation: dot 1.2s ease-in-out infinite; margin: 0 1px; }
-    .ai-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .ai-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes dot { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px;width:640px;max-width:92vw;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);}
+.modal-close{width:30px;height:30px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text2);}
+.modal-close:hover{border-color:var(--red);color:var(--red);}
 
-    /* Progress bar */
-    .progress-track { height: 4px; background: var(--bg2); border-radius: 2px; }
-    .progress-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.4s; }
-    .progress-fill.green { background: var(--green); }
-    .progress-fill.amber { background: var(--amber); }
-    .progress-fill.red { background: var(--red); }
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;right:24px;padding:13px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s;display:flex;align-items:center;gap:8px;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-success{background:var(--green);color:#fff;}
+.toast-error{background:var(--red);color:#fff;}
+.toast-info{background:var(--blue);color:#fff;}
 
-    /* Empty state */
-    .empty-state { text-align: center; padding: 60px 20px; }
-    .empty-state i { font-size: 48px; color: var(--text3); margin-bottom: 14px; display: block; }
-    .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-bottom: 8px; }
-    .empty-state p { font-size: 13px; color: var(--text3); line-height: 1.6; margin-bottom: 20px; }
+/* ===== MISC ===== */
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.empty-state{text-align:center;padding:60px 20px;}
+.empty-state i{font-size:52px;color:var(--text3);margin-bottom:16px;display:block;}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:8px;}
+.empty-state p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dot-green{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;}
+.dot-amber{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;}
+.dot-red{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;}
+.glow-blue{box-shadow:0 0 20px rgba(59,130,246,0.2);}
+.glow-green{box-shadow:0 0 20px rgba(16,185,129,0.2);}
+.glow-purple{box-shadow:0 0 20px rgba(139,92,246,0.2);}
+textarea.form-input{resize:vertical;min-height:80px;}
+select.form-input{cursor:pointer;}
+.relative{position:relative;}
+.hidden{display:none!important;}
 
-    /* Kanban */
-    .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    .kanban-col { background: var(--bg); border-radius: var(--radius-lg); padding: 14px; }
-    .kanban-col-title { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-    .kanban-count { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1px 7px; font-size: 11px; }
-    .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; font-size: 12px; }
-    .kanban-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
-    .kanban-card-title { font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
-    .kanban-card-meta { color: var(--text3); font-size: 11px; }
+/* ===== ANALYTICS ===== */
+.analytics-bar-wrap{display:flex;flex-direction:column;gap:12px;}
+.analytics-bar-item{display:flex;align-items:center;gap:12px;}
+.ab-label{font-size:12px;color:var(--text2);width:120px;flex-shrink:0;}
+.ab-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.ab-fill{height:100%;border-radius:4px;transition:width 0.6s;}
+.ab-val{font-size:12px;font-weight:600;color:var(--text);width:40px;text-align:right;}
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .login-left { display: none; }
-      .login-right { width: 100%; padding: 32px 24px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .doc-grid { grid-template-columns: repeat(2, 1fr); }
-      .kanban { grid-template-columns: repeat(2, 1fr); }
-      .main-content { padding: 16px; }
-    }
+/* ===== BID INTEL ===== */
+.bidintel-card{background:linear-gradient(135deg,var(--purple-bg),var(--blue-bg));border:1px solid var(--purple-border);border-radius:var(--radius-lg);padding:20px;}
 
-    /* Tabs content */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .relative { position: relative; }
-  </style>
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr);}.kanban{grid-template-columns:repeat(2,1fr);}.doc-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main-area{margin-left:0;}.stats-grid{grid-template-columns:1fr 1fr;}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.kanban{grid-template-columns:1fr;}.doc-grid{grid-template-columns:1fr 1fr;}.tc-meta{gap:8px;}}
+</style>
 </head>
 <body>
 
-<!-- ============ LOGIN PAGE ============ -->
+<!-- ===== LOGIN PAGE ===== -->
 <div class="login-page" id="loginPage">
-  <div class="login-left">
-    <div class="login-logo">
-      <div class="login-logo-icon">📋</div>
-      <div class="login-logo-name">TenderAI</div>
-    </div>
-    <div class="login-hero">
-      <div class="login-tagline">Tender management <em>finally</em> made smart.</div>
-      <div class="login-desc">AI se tender analyze karo, documents banao, team ke saath kaam karo — sab ek jagah.</div>
-    </div>
-    <div class="login-features">
-      <div class="login-feat"><div class="login-feat-dot"></div>PDF upload karo — AI 30 sec mein analyze karega</div>
-      <div class="login-feat"><div class="login-feat-dot"></div>Letters, PPT, write-up — ek click mein ready</div>
-      <div class="login-feat"><div class="login-feat-dot"></div>Team assignment aur status tracking</div>
-      <div class="login-feat"><div class="login-feat-dot"></div>Password protected document sharing</div>
-      <div class="login-feat"><div class="login-feat-dot"></div>Deadline alerts — kabhi miss nahi hogi</div>
-    </div>
+<div class="login-bg"></div>
+<div class="login-grid"></div>
+<div class="login-box">
+  <div class="login-logo">
+    <div class="login-logo-icon">📋</div>
+    <div class="login-logo-name">TenderAI</div>
+    <div class="login-logo-badge">PRO</div>
   </div>
-  <div class="login-right">
-    <h2>Shuru Karein</h2>
-    <p>TenderAI mein apna account banao — free 14 din trial</p>
-    <div class="login-error" id="loginError"></div>
-    <button class="btn-google" onclick="loginWithGoogle()">
-      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-      Google se Login karo
-    </button>
-    <div class="divider"><div class="divider-line"></div><span>ya email se</span><div class="divider-line"></div></div>
-    <div id="loginForm">
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="loginEmail" placeholder="tumhara@email.com" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" />
-      </div>
-      <button class="btn-primary" onclick="loginWithEmail()">Login karein →</button>
-      <div class="login-switch">Naya account? <a onclick="showSignup()">Sign up karein</a></div>
-    </div>
-    <div id="signupForm" style="display:none;">
-      <div class="form-group">
-        <label class="form-label">Poora Naam</label>
-        <input type="text" class="form-input" id="signupName" placeholder="Ramesh Sharma" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="signupEmail" placeholder="tumhara@email.com" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="signupPassword" placeholder="8+ characters" />
-      </div>
-      <button class="btn-primary" onclick="signupWithEmail()">Account banao →</button>
-      <div class="login-switch">Pehle se account hai? <a onclick="showLogin()">Login karein</a></div>
-    </div>
+  <div class="login-title">Shuru Karein</div>
+  <div class="login-sub">AI-powered tender management — free 14 din trial</div>
+  <div class="login-error" id="loginError"></div>
+  <button class="btn-google" onclick="loginWithGoogle()">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+    Google se Login karo
+  </button>
+  <div class="login-divider"><div class="login-divider-line"></div><span>ya email se</span><div class="login-divider-line"></div></div>
+  <div id="loginForm">
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" placeholder="tumhara@email.com"/></div>
+    <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginWithEmail()"/></div>
+    <button class="btn-primary" onclick="loginWithEmail()">Login karein →</button>
+    <div class="login-switch">Naya account? <a onclick="toggleForm(true)">Sign up karein</a></div>
+  </div>
+  <div id="signupForm" class="hidden">
+    <div class="form-group"><label class="form-label">Poora Naam</label><input type="text" class="form-input" id="signupName" placeholder="Ramesh Sharma"/></div>
+    <div class="form-group"><label class="form-label">Company Name</label><input type="text" class="form-input" id="signupCompany" placeholder="Sharma Constructions Pvt. Ltd."/></div>
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signupEmail" placeholder="tumhara@email.com"/></div>
+    <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signupPassword" placeholder="8+ characters"/></div>
+    <button class="btn-primary" onclick="signupWithEmail()">Account banao →</button>
+    <div class="login-switch">Pehle se account hai? <a onclick="toggleForm(false)">Login karein</a></div>
   </div>
 </div>
+</div>
 
-<!-- ============ MAIN APP ============ -->
+<!-- ===== MAIN APP ===== -->
 <div class="app" id="mainApp">
-  <!-- Top Nav -->
-  <nav class="topnav">
-    <div class="topnav-logo">📋 TenderAI</div>
-    <div class="topnav-search">
-      <i class="ti ti-search"></i>
-      <input type="text" placeholder="Tender dhundho..." id="searchInput" oninput="filterTenders(this.value)" />
-    </div>
-    <div class="topnav-right">
-      <div class="notif-btn" onclick="showTab('notifications')"><i class="ti ti-bell"></i><div class="notif-dot"></div></div>
-      <div class="relative">
-        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">R</div>
-        <div class="user-menu" id="userMenu">
-          <div class="user-menu-item" onclick="showTab('profile')"><i class="ti ti-user"></i> Profile</div>
-          <div class="user-menu-item" onclick="showTab('settings')"><i class="ti ti-settings"></i> Settings</div>
-          <div class="user-menu-item danger" onclick="logout()"><i class="ti ti-logout"></i> Logout</div>
-        </div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">📋</div>
+    <div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="sidebar-logo-name">TenderAI</div>
+        <div class="sidebar-logo-pro">PRO</div>
       </div>
     </div>
-  </nav>
-
-  <!-- Tab Nav -->
-  <div class="tabnav">
-    <div class="tabnav-item active" onclick="showTab('dashboard')" id="tab-dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-    <div class="tabnav-item" onclick="showTab('tenders')" id="tab-tenders"><i class="ti ti-folder"></i> Tenders</div>
-    <div class="tabnav-item" onclick="showTab('upload')" id="tab-upload"><i class="ti ti-upload"></i> Upload</div>
-    <div class="tabnav-item" onclick="showTab('documents')" id="tab-documents"><i class="ti ti-file-text"></i> Documents</div>
-    <div class="tabnav-item" onclick="showTab('team')" id="tab-team"><i class="ti ti-users"></i> Team</div>
-    <div class="tabnav-item" onclick="showTab('ai')" id="tab-ai"><i class="ti ti-robot"></i> AI Assistant</div>
-    <div class="tabnav-item" onclick="showTab('analytics')" id="tab-analytics"><i class="ti ti-chart-bar"></i> Analytics</div>
   </div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-
-    <!-- DASHBOARD TAB -->
-    <div class="tab-content active" id="content-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Tenders</div>
-          <div class="stat-val" id="stat-total">0</div>
-          <div class="stat-delta">Abhi tak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">AI Analyzed</div>
-          <div class="stat-val" id="stat-analyzed">0</div>
-          <div class="stat-delta">Auto process</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Is Hafte Deadline</div>
-          <div class="stat-val" id="stat-deadlines">0</div>
-          <div class="stat-delta danger" id="stat-deadlines-label">Check karo</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Won Tenders</div>
-          <div class="stat-val" id="stat-won">0</div>
-          <div class="stat-delta">🏆 Jite</div>
-        </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+    <div class="nav-item" onclick="showPage('tenders',this)" id="nav-tenders"><i class="ti ti-folder-open"></i> Tender Library <span class="nav-badge nb-blue" id="nb-tenders">0</span></div>
+    <div class="nav-item" onclick="showPage('upload',this)" id="nav-upload"><i class="ti ti-upload"></i> Upload Tender</div>
+    <div class="nav-item" onclick="showPage('kanban',this)" id="nav-kanban"><i class="ti ti-layout-kanban"></i> Pipeline Board</div>
+    <div class="nav-section">Documents</div>
+    <div class="nav-item" onclick="showPage('documents',this)" id="nav-documents"><i class="ti ti-file-text"></i> Document Studio</div>
+    <div class="nav-item" onclick="showPage('letters',this)" id="nav-letters"><i class="ti ti-certificate"></i> Legal Letters</div>
+    <div class="nav-item" onclick="showPage('ppt',this)" id="nav-ppt"><i class="ti ti-presentation"></i> PPT & Write-up</div>
+    <div class="nav-section">Intelligence</div>
+    <div class="nav-item" onclick="showPage('ai',this)" id="nav-ai"><i class="ti ti-robot"></i> AI Assistant <span class="nav-badge nb-purple">AI</span></div>
+    <div class="nav-item" onclick="showPage('bidintel',this)" id="nav-bidintel"><i class="ti ti-target"></i> BidIntel <span class="nav-badge nb-amber">NEW</span></div>
+    <div class="nav-section">Team & Reports</div>
+    <div class="nav-item" onclick="showPage('team',this)" id="nav-team"><i class="ti ti-users"></i> Team</div>
+    <div class="nav-item" onclick="showPage('analytics',this)" id="nav-analytics"><i class="ti ti-chart-bar"></i> Analytics</div>
+    <div class="nav-item" onclick="showPage('notifications',this)" id="nav-notifications"><i class="ti ti-bell"></i> Alerts <span class="nav-badge nb-red" id="nb-notif">3</span></div>
+    <div class="nav-section">Settings</div>
+    <div class="nav-item" onclick="showPage('profile',this)" id="nav-profile"><i class="ti ti-building"></i> Company Profile</div>
+    <div class="nav-item" onclick="showPage('settings',this)" id="nav-settings"><i class="ti ti-settings"></i> Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info" onclick="showPage('profile',document.getElementById('nav-profile'))">
+      <div class="user-avatar" id="sidebarAvatar">R</div>
+      <div>
+        <div class="user-name" id="sidebarName">Loading...</div>
+        <div class="user-email" id="sidebarEmail">...</div>
       </div>
+    </div>
+    <div style="margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:8px;font-size:11px;color:var(--text3);">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>Trial</span><span id="trialDays" style="color:var(--amber);">14 din baaki</span></div>
+      <div class="prog-track"><div class="prog-fill pf-amber" style="width:70%"></div></div>
+    </div>
+    <button class="btn btn-red btn-sm" style="width:100%;margin-top:8px;justify-content:center;" onclick="logout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>
+</aside>
 
-      <div class="section-head">
+<!-- MAIN AREA -->
+<div class="main-area">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Tenders, documents dhundho..." id="globalSearch" oninput="globalSearchFn(this.value)"/>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn" onclick="showPage('upload',document.getElementById('nav-upload'))" title="Upload"><i class="ti ti-plus"></i></div>
+      <div class="icon-btn" onclick="showPage('notifications',document.getElementById('nav-notifications'))" title="Notifications"><i class="ti ti-bell"></i><div class="notif-dot"></div></div>
+      <div class="icon-btn" onclick="toggleDark()" title="Theme"><i class="ti ti-moon"></i></div>
+    </div>
+  </header>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="page-dashboard" class="page-active">
+      <div class="page-header">
         <div>
-          <div class="section-title">Recent Tenders</div>
-          <div class="section-sub">Naaye aur urgent tenders</div>
+          <div class="page-title">Dashboard 🏠</div>
+          <div class="page-sub">Aapka TenderAI overview — sab ek jagah</div>
         </div>
-        <button class="btn btn-dark" onclick="showTab('upload')"><i class="ti ti-plus"></i> Naya Tender</button>
+        <div class="header-actions">
+          <button class="btn btn-green" onclick="showPage('upload',document.getElementById('nav-upload'))"><i class="ti ti-upload"></i> Upload Tender</button>
+          <button class="btn btn-gradient" onclick="showPage('ai',document.getElementById('nav-ai'))"><i class="ti ti-robot"></i> AI Chat</button>
+        </div>
       </div>
-      <div class="tender-list" id="dashboardTenders">
-        <div class="empty-state">
-          <i class="ti ti-file-plus"></i>
-          <h3>Koi tender nahi abhi</h3>
-          <p>Pehla tender upload karo — AI khud analyze kar lega</p>
-          <button class="btn btn-dark" onclick="showTab('upload')"><i class="ti ti-upload"></i> Tender Upload Karo</button>
+
+      <div class="stats-grid">
+        <div class="stat-card sc-blue">
+          <div class="stat-icon si-blue"><i class="ti ti-folder"></i></div>
+          <div class="stat-label">Total Tenders</div>
+          <div class="stat-val" id="d-total">0</div>
+          <div class="stat-delta delta-up"><i class="ti ti-trending-up"></i> <span id="d-total-delta">Abhi tak</span></div>
         </div>
+        <div class="stat-card sc-purple">
+          <div class="stat-icon si-purple"><i class="ti ti-robot"></i></div>
+          <div class="stat-label">AI Analyzed</div>
+          <div class="stat-val" id="d-analyzed">0</div>
+          <div class="stat-delta delta-neutral">Auto processed</div>
+        </div>
+        <div class="stat-card sc-amber">
+          <div class="stat-icon si-amber"><i class="ti ti-clock"></i></div>
+          <div class="stat-label">Deadlines This Week</div>
+          <div class="stat-val" id="d-deadlines">0</div>
+          <div class="stat-delta" id="d-deadlines-delta">Upcoming</div>
+        </div>
+        <div class="stat-card sc-green">
+          <div class="stat-icon si-green"><i class="ti ti-trophy"></i></div>
+          <div class="stat-label">Tenders Won</div>
+          <div class="stat-val" id="d-won">0</div>
+          <div class="stat-delta delta-up"><i class="ti ti-trending-up"></i> Win rate</div>
+        </div>
+      </div>
+
+      <!-- BidIntel widget -->
+      <div class="bidintel-card" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="font-size:24px;">🎯</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);">BidIntel — AI Competitive Analysis</div>
+            <div style="font-size:12px;color:var(--text2);">Competitors track karo, best bid price pata karo</div>
+          </div>
+          <button class="btn btn-purple btn-sm" style="margin-left:auto;" onclick="showPage('bidintel',document.getElementById('nav-bidintel'))"><i class="ti ti-target"></i> Open BidIntel</button>
+        </div>
+        <div class="grid-3">
+          <div style="background:var(--bg2);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:700;color:var(--purple);" id="bi-winrate">0%</div>
+            <div style="font-size:11px;color:var(--text3);">Win Rate</div>
+          </div>
+          <div style="background:var(--bg2);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:700;color:var(--cyan);" id="bi-analyses">0</div>
+            <div style="font-size:11px;color:var(--text3);">Analyses Done</div>
+          </div>
+          <div style="background:var(--bg2);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:700;color:var(--green);" id="bi-competitors">0</div>
+            <div style="font-size:11px;color:var(--text3);">Competitors Tracked</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Tenders -->
+      <div class="card-header"><div><div class="card-title">Recent Tenders</div><div class="card-sub">Naaye aur urgent tenders</div></div><button class="btn btn-sm" onclick="showPage('tenders',document.getElementById('nav-tenders'))">Sab dekho →</button></div>
+      <div class="tender-list" id="dashTenders">
+        <div class="empty-state"><i class="ti ti-file-plus"></i><h3>Koi tender nahi abhi</h3><p>Pehla tender upload karo — AI khud analyze kar lega!</p><button class="btn btn-gradient" onclick="showPage('upload',document.getElementById('nav-upload'))"><i class="ti ti-upload"></i> Upload Karo</button></div>
       </div>
     </div>
 
-    <!-- TENDERS TAB -->
-    <div class="tab-content" id="content-tenders">
-      <div class="section-head">
-        <div>
-          <div class="section-title">Tender Library</div>
-          <div class="section-sub">Saare tenders ek jagah</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <select class="btn" id="statusFilter" onchange="filterByStatus()">
-            <option value="">Sab Status</option>
+    <!-- ===== TENDERS ===== -->
+    <div id="page-tenders" class="hidden">
+      <div class="page-header">
+        <div><div class="page-title">Tender Library 📁</div><div class="page-sub">Saare tenders ek jagah</div></div>
+        <div class="header-actions">
+          <select class="btn" id="statusFilter" onchange="filterTenders()">
+            <option value="">All Status</option>
             <option value="new">New</option>
             <option value="in_progress">In Progress</option>
             <option value="submitted">Submitted</option>
             <option value="won">Won</option>
             <option value="lost">Lost</option>
           </select>
-          <button class="btn btn-dark" onclick="showTab('upload')"><i class="ti ti-plus"></i> Upload</button>
+          <select class="btn" id="sectorFilter" onchange="filterTenders()">
+            <option value="">All Sectors</option>
+            <option value="Infrastructure">Infrastructure</option>
+            <option value="IT">IT</option>
+            <option value="Energy">Energy</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+          </select>
+          <button class="btn btn-gradient" onclick="showPage('upload',document.getElementById('nav-upload'))"><i class="ti ti-plus"></i> Upload</button>
         </div>
       </div>
       <div class="tender-list" id="allTenders">
-        <div class="empty-state">
-          <i class="ti ti-folder-open"></i>
-          <h3>Library khali hai</h3>
-          <p>Tender upload karo — yahan dikhne lagenge</p>
-          <button class="btn btn-dark" onclick="showTab('upload')"><i class="ti ti-upload"></i> Pehla Tender Upload Karo</button>
-        </div>
+        <div class="empty-state"><i class="ti ti-folder-open"></i><h3>Library khali hai</h3><p>Tenders upload karo</p></div>
       </div>
     </div>
 
-    <!-- UPLOAD TAB -->
-    <div class="tab-content" id="content-upload">
-      <div class="section-head">
-        <div class="section-title">Tender Upload Karo</div>
-      </div>
+    <!-- ===== UPLOAD ===== -->
+    <div id="page-upload" class="hidden">
+      <div class="page-header"><div><div class="page-title">Upload Tender 📤</div><div class="page-sub">PDF upload karo — AI analyze karega</div></div></div>
       <div class="card" style="margin-bottom:16px;">
-        <div class="upload-zone" onclick="document.getElementById('fileInput').click()" id="uploadZone">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
           <i class="ti ti-cloud-upload"></i>
-          <h3>PDF ya DOC yahan drop karo</h3>
-          <p>Ya click karke file choose karo · Max 10MB</p>
+          <h3>PDF, DOC, DOCX drop karo yahan</h3>
+          <p>Ya click karke file choose karo · Max 10MB supported</p>
         </div>
-        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" style="display:none" onchange="handleFileUpload(this)" />
-        <div id="uploadProgress" style="display:none;margin-top:16px;">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" style="display:none" onchange="handleUpload(this)"/>
+        <div id="uploadProg" class="hidden" style="margin-top:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:500;" id="uploadFileName"></span>
-            <span class="ai-analyzing"><i class="ti ti-robot"></i> AI analyze kar raha hai<div class="ai-dots"><span></span><span></span><span></span></div></span>
+            <span style="font-size:13px;font-weight:600;" id="uploadFileName">file.pdf</span>
+            <div class="ai-thinking"><i class="ti ti-robot"></i> AI analyze kar raha hai<div class="ai-dots"><span></span><span></span><span></span></div></div>
           </div>
-          <div class="progress-track"><div class="progress-fill green" id="uploadBar" style="width:0%"></div></div>
+          <div class="prog-track"><div class="prog-fill pf-blue" id="uploadBar" style="width:0%"></div></div>
         </div>
       </div>
-      <div class="card">
-        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Ya GeM / CPPP URL paste karo</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Portal se directly import karo</div>
-        <div style="display:flex;gap:8px;">
-          <input type="text" class="form-input" id="tenderUrl" placeholder="https://gem.gov.in/opportunity/..." style="flex:1;" />
-          <button class="btn btn-dark" onclick="importFromUrl()"><i class="ti ti-download"></i> Import</button>
-        </div>
-      </div>
-      <div class="card" style="margin-top:16px;background:var(--purple-bg);border-color:var(--purple-bg);">
-        <div style="font-size:13px;font-weight:500;color:var(--purple);margin-bottom:10px;"><i class="ti ti-robot"></i> Upload ke baad AI automatically karega:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--purple);">
-          <div>✓ Deadline, value, department extract karega</div>
-          <div>✓ Eligibility check karega tumhari profile se</div>
-          <div>✓ Fit score 0–100 dega</div>
-          <div>✓ Missing documents list karega</div>
-          <div>✓ Risk factors highlight karega</div>
-          <div>✓ Compliance checklist banayega</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DOCUMENTS TAB -->
-    <div class="tab-content" id="content-documents">
-      <div class="section-head">
-        <div class="section-title">Document Studio</div>
-        <div class="section-sub">AI se koi bhi document banao</div>
-      </div>
-
-      <!-- Letter Type Selector -->
       <div class="card" style="margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:500;margin-bottom:12px;">Kaunsa document chahiye?</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Ya GeM / CPPP URL se import karo</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Portal link paste karo — AI details extract karega</div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" class="form-input" id="importUrl" placeholder="https://gem.gov.in/opportunity/..." style="flex:1;"/>
+          <button class="btn btn-blue" onclick="importFromURL()"><i class="ti ti-download"></i> Import</button>
+        </div>
+      </div>
+      <div class="card" style="background:var(--purple-bg);border-color:var(--purple-border);">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:12px;"><i class="ti ti-robot"></i> Upload ke baad AI automatically karega:</div>
+        <div class="grid-2" style="font-size:12px;color:var(--text2);gap:8px;">
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Deadline, value, department extract</div>
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Fit score 0–100 calculate</div>
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Missing documents list</div>
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Risk factors highlight</div>
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Compliance checklist</div>
+          <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--green);">✓</span> Competitor bid analysis</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== KANBAN ===== -->
+    <div id="page-kanban" class="hidden">
+      <div class="page-header"><div><div class="page-title">Pipeline Board 📊</div><div class="page-sub">Tender status track karo — drag karo update karne ke liye</div></div></div>
+      <div class="kanban" id="kanbanBoard">
+        <div class="kanban-col"><div class="kanban-col-head"><div class="kanban-col-title"><div class="kcth kcth-blue"></div>New</div><span class="kanban-count" id="kc-new">0</span></div><div id="kl-new"></div></div>
+        <div class="kanban-col"><div class="kanban-col-head"><div class="kanban-col-title"><div class="kcth kcth-purple"></div>In Progress</div><span class="kanban-count" id="kc-progress">0</span></div><div id="kl-progress"></div></div>
+        <div class="kanban-col"><div class="kanban-col-head"><div class="kanban-col-title"><div class="kcth kcth-amber"></div>Review</div><span class="kanban-count" id="kc-review">0</span></div><div id="kl-review"></div></div>
+        <div class="kanban-col"><div class="kanban-col-head"><div class="kanban-col-title"><div class="kcth kcth-cyan"></div>Submitted</div><span class="kanban-count" id="kc-submitted">0</span></div><div id="kl-submitted"></div></div>
+      </div>
+    </div>
+
+    <!-- ===== DOCUMENT STUDIO ===== -->
+    <div id="page-documents" class="hidden">
+      <div class="page-header"><div><div class="page-title">Document Studio 🏭</div><div class="page-sub">AI se koi bhi document banao — letterhead ya eStamp</div></div></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">Document Type Chunna</div></div>
         <div class="doc-grid" id="docTypeGrid">
-          <div class="doc-card" onclick="selectDocType('cover_letter',this)">
-            <div class="doc-card-icon">📄</div>
-            <div class="doc-card-name">Cover Letter</div>
-            <div class="doc-card-desc">Tender submission ke saath formal letter</div>
-            <div class="doc-card-time">⚡ 30 sec</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('emd_exemption',this)">
-            <div class="doc-card-icon">💰</div>
-            <div class="doc-card-name">EMD Exemption</div>
-            <div class="doc-card-desc">MSME/Startup EMD maafi ke liye</div>
-            <div class="doc-card-time">⚡ 1 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('poa',this)">
-            <div class="doc-card-icon">✍️</div>
-            <div class="doc-card-name">Power of Attorney</div>
-            <div class="doc-card-desc">Kisi ko legal adhikaar dena</div>
-            <div class="doc-card-time">⚡ 2 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('auth_letter',this)">
-            <div class="doc-card-icon">👤</div>
-            <div class="doc-card-name">Authorization Letter</div>
-            <div class="doc-card-desc">Representative ko authorize karna</div>
-            <div class="doc-card-time">⚡ 1 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('not_blacklisted',this)">
-            <div class="doc-card-icon">✅</div>
-            <div class="doc-card-name">Not Blacklisted</div>
-            <div class="doc-card-desc">Self declaration certificate</div>
-            <div class="doc-card-time">⚡ 30 sec</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('gst_exemption',this)">
-            <div class="doc-card-icon">🧾</div>
-            <div class="doc-card-name">GST Exemption</div>
-            <div class="doc-card-desc">GST se exemption letter</div>
-            <div class="doc-card-time">⚡ 1 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('writeup',this)">
-            <div class="doc-card-icon">📝</div>
-            <div class="doc-card-name">Technical Write-up</div>
-            <div class="doc-card-desc">AI se pura technical document</div>
-            <div class="doc-card-time">⚡ 3 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('ppt',this)">
-            <div class="doc-card-icon">📊</div>
-            <div class="doc-card-name">PPT Presentation</div>
-            <div class="doc-card-desc">Pre-bid meeting ke liye slides</div>
-            <div class="doc-card-time">⚡ 5 min</div>
-          </div>
-          <div class="doc-card" onclick="selectDocType('bid_draft',this)">
-            <div class="doc-card-icon">📋</div>
-            <div class="doc-card-name">Bid Document</div>
-            <div class="doc-card-desc">Technical + financial bid draft</div>
-            <div class="doc-card-time">⚡ 2 min</div>
-          </div>
+          <div class="doc-card" onclick="selectDoc('cover_letter',this)"><div class="doc-icon">📄</div><div class="doc-name">Cover Letter</div><div class="doc-desc">Tender submission ke saath formal covering letter</div><div class="doc-time">⚡ 30 seconds</div></div>
+          <div class="doc-card" onclick="selectDoc('emd_exemption',this)"><div class="doc-icon">💰</div><div class="doc-name">EMD Exemption</div><div class="doc-desc">MSME/Startup EMD maafi ke liye letter</div><div class="doc-time">⚡ 1 minute</div></div>
+          <div class="doc-card" onclick="selectDoc('fee_exemption',this)"><div class="doc-icon">🧾</div><div class="doc-name">Tender Fee Exemption</div><div class="doc-desc">Processing fee waiver request</div><div class="doc-time">⚡ 1 minute</div></div>
+          <div class="doc-card" onclick="selectDoc('gst_exemption',this)"><div class="doc-icon">📑</div><div class="doc-name">GST Exemption</div><div class="doc-desc">GST se exemption — sahi Act section ke saath</div><div class="doc-time">⚡ 1 minute</div></div>
+          <div class="doc-card" onclick="selectDoc('not_blacklisted',this)"><div class="doc-icon">✅</div><div class="doc-name">Not Blacklisted</div><div class="doc-desc">Self declaration — government accepted format</div><div class="doc-time">⚡ 30 seconds</div></div>
+          <div class="doc-card" onclick="selectDoc('undertaking',this)"><div class="doc-icon">📝</div><div class="doc-name">Undertaking Letter</div><div class="doc-desc">Quality, timeline, compliance undertaking</div><div class="doc-time">⚡ 1 minute</div></div>
+          <div class="doc-card" onclick="selectDoc('bid_draft',this)"><div class="doc-icon">📋</div><div class="doc-name">Bid Document Draft</div><div class="doc-desc">Technical + financial bid — AI likhega</div><div class="doc-time">⚡ 2 minutes</div></div>
+          <div class="doc-card" onclick="selectDoc('company_profile',this)"><div class="doc-icon">🏢</div><div class="doc-name">Company Profile</div><div class="doc-desc">Professional company profile document</div><div class="doc-time">⚡ 1 minute</div></div>
+          <div class="doc-card" onclick="selectDoc('experience_cert',this)"><div class="doc-icon">🏆</div><div class="doc-name">Experience Certificate</div><div class="doc-desc">Past project completion certificate</div><div class="doc-time">⚡ 1 minute</div></div>
         </div>
       </div>
-
-      <!-- Format Selector -->
-      <div class="card" id="formatSelector" style="display:none;margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Kis format mein chahiye?</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;" id="formatNote"></div>
-        <div class="format-selector">
-          <div class="format-card" id="lhCard" onclick="selectFormat('letterhead')">
-            <div class="format-card-title" style="color:var(--blue);">📄 Company Letterhead</div>
-            <div class="format-card-desc">Company logo, header, footer har page pe · Director sign + stamp · Professional format</div>
-          </div>
-          <div class="format-card" id="esCard" onclick="selectFormat('estamp')">
-            <div class="format-card-title" style="color:var(--amber);">🏛️ eStamp Paper</div>
-            <div class="format-card-desc">Government eStamp format · Certificate number · Barcode + QR · Legally valid · Notary ready</div>
+      <div class="card hidden" id="docFormatCard" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">Format Select Karo</div><div class="card-sub" id="formatHint"></div></div>
+        <div class="format-grid">
+          <div class="format-card" id="fcLH" onclick="selectFormat('letterhead')"><div class="format-title" style="color:var(--blue);">📄 Company Letterhead</div><div class="format-desc">Company logo, header, footer har page pe · Director sign + stamp · Professional format · PDF download</div></div>
+          <div class="format-card" id="fcES" onclick="selectFormat('estamp')"><div class="format-title" style="color:var(--amber);">🏛️ eStamp Paper</div><div class="format-desc">Government eStamp format · Certificate no. + barcode · QR verify · Legally valid · Notary ready</div></div>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="form-group">
+            <label class="form-label">Tender ke liye (optional)</label>
+            <select class="form-input" id="docForTender"><option value="">-- General document --</option></select>
           </div>
         </div>
-        <div style="margin-top:12px;">
-          <div style="font-size:12px;font-weight:500;margin-bottom:6px;">Tender select karo (optional):</div>
-          <select class="form-input" id="tenderForDoc" style="font-size:13px;">
-            <option value="">-- Koi specific tender nahi --</option>
-          </select>
-        </div>
-        <button class="btn btn-dark" style="margin-top:14px;width:100%;" onclick="generateDocument()"><i class="ti ti-wand"></i> AI se Generate Karo</button>
+        <button class="btn btn-gradient" style="width:100%;justify-content:center;" onclick="generateDoc()"><i class="ti ti-wand"></i> AI se Generate Karo</button>
       </div>
-
-      <!-- Generated Document Preview -->
-      <div class="card" id="generatedDocArea" style="display:none;">
-        <div class="section-head">
-          <div class="section-title" id="generatedDocTitle">Document Ready!</div>
+      <div class="card hidden" id="generatedDocCard">
+        <div class="card-header">
+          <div><div class="card-title" id="genDocTitle">Document Ready! ✅</div></div>
           <div style="display:flex;gap:8px;">
-            <button class="btn" onclick="copyDocument()"><i class="ti ti-copy"></i> Copy</button>
-            <button class="btn btn-dark" onclick="downloadDocument()"><i class="ti ti-download"></i> Download PDF</button>
+            <button class="btn btn-sm" onclick="copyDoc()"><i class="ti ti-copy"></i> Copy</button>
+            <button class="btn btn-blue btn-sm" onclick="downloadDoc()"><i class="ti ti-download"></i> Download</button>
           </div>
         </div>
-        <div id="generatedDocContent" style="font-size:13px;line-height:1.8;color:var(--text);white-space:pre-wrap;background:var(--bg);padding:20px;border-radius:var(--radius);border:1px solid var(--border);"></div>
+        <div id="genDocContent" style="font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap;background:var(--bg3);padding:20px;border-radius:var(--radius);border:1px solid var(--border);max-height:500px;overflow-y:auto;"></div>
       </div>
     </div>
 
-    <!-- TEAM TAB -->
-    <div class="tab-content" id="content-team">
-      <div class="section-head">
-        <div class="section-title">Team Management</div>
-        <button class="btn btn-dark" onclick="showInviteModal()"><i class="ti ti-user-plus"></i> Member Invite Karo</button>
-      </div>
-
-      <!-- Kanban Board -->
-      <div style="margin-bottom:20px;">
-        <div style="font-size:13px;font-weight:500;margin-bottom:12px;color:var(--text2);">Tender Status Board</div>
-        <div class="kanban" id="kanbanBoard">
-          <div class="kanban-col">
-            <div class="kanban-col-title">New <span class="kanban-count" id="k-new">0</span></div>
-            <div id="kc-new"></div>
-          </div>
-          <div class="kanban-col">
-            <div class="kanban-col-title">In Progress <span class="kanban-count" id="k-progress">0</span></div>
-            <div id="kc-progress"></div>
-          </div>
-          <div class="kanban-col">
-            <div class="kanban-col-title">Review <span class="kanban-count" id="k-review">0</span></div>
-            <div id="kc-review"></div>
-          </div>
-          <div class="kanban-col">
-            <div class="kanban-col-title">Submitted <span class="kanban-count" id="k-submitted">0</span></div>
-            <div id="kc-submitted"></div>
-          </div>
+    <!-- ===== LEGAL LETTERS ===== -->
+    <div id="page-letters" class="hidden">
+      <div class="page-header"><div><div class="page-title">Legal Letters ⚖️</div><div class="page-sub">POA, Authorization, Not Blacklisted — letterhead ya eStamp</div></div></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">Legal Document Type</div></div>
+        <div class="doc-grid">
+          <div class="doc-card" onclick="selectDoc('poa',this,true)"><div class="doc-icon">✍️</div><div class="doc-name">Power of Attorney</div><div class="doc-desc">Kisi ko legal adhikaar dena — tender submit karne ka</div><div class="doc-time" style="color:var(--amber);">⚠️ eStamp zaroori</div></div>
+          <div class="doc-card" onclick="selectDoc('auth_letter',this,true)"><div class="doc-icon">👤</div><div class="doc-name">Authorization Letter</div><div class="doc-desc">Representative ko authorize karna — meeting, document</div><div class="doc-time">⚡ Letterhead chalega</div></div>
+          <div class="doc-card" onclick="selectDoc('not_blacklisted',this,true)"><div class="doc-icon">🛡️</div><div class="doc-name">Not Blacklisted</div><div class="doc-desc">Self declaration — company blacklisted nahi hai</div><div class="doc-time">⚡ Letterhead chalega</div></div>
+          <div class="doc-card" onclick="selectDoc('clinical_exemption',this,true)"><div class="doc-icon">🏥</div><div class="doc-name">Clinical Establishment</div><div class="doc-desc">Healthcare tender ke liye exemption letter</div><div class="doc-time">⚡ State-wise format</div></div>
+          <div class="doc-card" onclick="selectDoc('forwarding_letter',this,true)"><div class="doc-icon">📬</div><div class="doc-name">Forwarding Letter</div><div class="doc-desc">Document submission ke saath forwarding</div><div class="doc-time">⚡ 30 seconds</div></div>
+          <div class="doc-card" onclick="selectDoc('execution_plan',this,true)"><div class="doc-icon">📅</div><div class="doc-name">Execution Plan</div><div class="doc-desc">Project timeline + Gantt chart style plan</div><div class="doc-time">⚡ 2 minutes</div></div>
         </div>
       </div>
-
-      <div class="card">
-        <div style="font-size:13px;font-weight:500;margin-bottom:14px;">Team Members</div>
-        <table class="team-table">
-          <thead>
-            <tr>
-              <th>Member</th>
-              <th>Role</th>
-              <th>Assigned Tenders</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="teamTableBody">
-            <tr><td colspan="5" style="text-align:center;color:var(--text3);padding:24px;">Koi team member nahi — invite karo!</td></tr>
-          </tbody>
-        </table>
+      <!-- Format selector reuse -->
+      <div class="card hidden" id="letterFormatCard" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">Format — Letterhead ya eStamp?</div><div class="card-sub" id="letterFormatHint" style="color:var(--amber);"></div></div>
+        <div class="format-grid">
+          <div class="format-card" id="lfcLH" onclick="selectLetterFormat('letterhead')"><div class="format-title" style="color:var(--blue);">📄 Company Letterhead</div><div class="format-desc">Company logo · Header/Footer · Director sign · Stamp · PDF</div></div>
+          <div class="format-card" id="lfcES" onclick="selectLetterFormat('estamp')"><div class="format-title" style="color:var(--amber);">🏛️ eStamp Paper</div><div class="format-desc">Govt format · Certificate no. · Barcode · QR · Witness lines</div></div>
+        </div>
+        <button class="btn btn-gradient" style="width:100%;justify-content:center;margin-top:14px;" onclick="generateLetter()"><i class="ti ti-wand"></i> Generate Karo</button>
+      </div>
+      <div class="card hidden" id="generatedLetterCard">
+        <div class="card-header">
+          <div class="card-title" id="genLetterTitle">Letter Ready! ✅</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm" onclick="copyLetter()"><i class="ti ti-copy"></i> Copy</button>
+            <button class="btn btn-blue btn-sm" onclick="downloadLetter()"><i class="ti ti-download"></i> Download</button>
+          </div>
+        </div>
+        <div id="genLetterContent" style="font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap;background:var(--bg3);padding:20px;border-radius:var(--radius);border:1px solid var(--border);max-height:500px;overflow-y:auto;"></div>
       </div>
     </div>
 
-    <!-- AI ASSISTANT TAB -->
-    <div class="tab-content" id="content-ai">
-      <div class="section-head">
-        <div class="section-title">AI Assistant</div>
-        <div class="section-sub">Tender ke baare mein koi bhi sawaal poochho</div>
-      </div>
-      <div class="card" style="padding:0;overflow:hidden;">
-        <div class="chat-container">
-          <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg-ai">
-              <strong>🤖 TenderAI:</strong> Namaste! Main aapka AI tender expert hun. Koi bhi sawaal poochh sakte hain — analysis, bid drafting, eligibility, compliance, documents, ya strategy ke baare mein. Main 24/7 yahan hun!
-            </div>
-            <div class="chat-msg-ai">
-              Kuch quick options: <br><br>
-              📋 "Mera best fit tender kaunsa hai?"<br>
-              📄 "EMD exemption letter ke liye kya chahiye?"<br>
-              ⚠️ "Is tender mein kya risks hain?"<br>
-              📊 "Railway tender ke liye kaunse documents chahiye?"
-            </div>
-          </div>
-          <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Sawaal poochho..." onkeydown="if(event.key==='Enter')sendChat()" />
-            <button class="btn btn-dark" onclick="sendChat()"><i class="ti ti-send"></i></button>
-          </div>
+    <!-- ===== PPT & WRITEUP ===== -->
+    <div id="page-ppt" class="hidden">
+      <div class="page-header"><div><div class="page-title">PPT & Write-up 📊</div><div class="page-sub">AI se presentation aur technical documents banao</div></div></div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card" style="cursor:pointer;border-color:var(--blue-border);" onclick="generatePPT()">
+          <div style="font-size:40px;margin-bottom:12px;">📊</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">PPT Presentation</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;">Pre-bid meeting ke liye 8-10 slides — Cover, About Us, Approach, Team, Timeline, Why Us — AI banayega</div>
+          <button class="btn btn-blue" style="width:100%;justify-content:center;"><i class="ti ti-wand"></i> Generate PPT Outline</button>
+        </div>
+        <div class="card" style="cursor:pointer;border-color:var(--purple-border);" onclick="generateWriteup()">
+          <div style="font-size:40px;margin-bottom:12px;">📝</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Technical Write-up</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;">Company capability, methodology, approach — sab AI likhega tumhari profile se — government format mein</div>
+          <button class="btn btn-purple" style="width:100%;justify-content:center;"><i class="ti ti-wand"></i> Generate Write-up</button>
         </div>
       </div>
-      <!-- Quick prompts -->
+      <div class="card hidden" id="pptResultCard">
+        <div class="card-header"><div class="card-title" id="pptResultTitle">Ready! ✅</div><div style="display:flex;gap:8px;"><button class="btn btn-sm" onclick="copyPPT()"><i class="ti ti-copy"></i></button><button class="btn btn-blue btn-sm" onclick="downloadPPT()"><i class="ti ti-download"></i></button></div></div>
+        <div id="pptResultContent" style="font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap;background:var(--bg3);padding:20px;border-radius:var(--radius);border:1px solid var(--border);max-height:500px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ===== AI ASSISTANT ===== -->
+    <div id="page-ai" class="hidden">
+      <div class="page-header"><div><div class="page-title">AI Assistant 🤖</div><div class="page-sub">Tender expert — Hinglish mein baat karo, 24/7</div></div></div>
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chatMsgs">
+          <div class="chat-ai"><strong>🤖 TenderAI Pro:</strong> Namaste! Main aapka AI tender expert hun. Koi bhi sawaal poochh sakte hain — analysis, documents, eligibility, strategy, legal letters — sab ke baare mein. Hinglish mein jawab dunga! 🙏</div>
+          <div class="chat-ai">Quick options try karo:<br><br>📊 <em>"Mera best fit tender kaunsa hai?"</em><br>📄 <em>"POA aur Authorization letter mein kya fark hai?"</em><br>⚠️ <em>"Is tender mein kya risks hain?"</em><br>💰 <em>"EMD exemption ke liye kya documents chahiye?"</em><br>🎯 <em>"Competitor analysis kaise karein?"</em></div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Sawaal poochho..." onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="btn btn-gradient" onclick="sendChat()"><i class="ti ti-send"></i></button>
+        </div>
+      </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-        <button class="btn btn-sm" onclick="quickPrompt('Mere best fit tenders kaunse hain?')">Best fit tenders</button>
-        <button class="btn btn-sm" onclick="quickPrompt('Is hafte ki deadlines kya hain?')">Urgent deadlines</button>
-        <button class="btn btn-sm" onclick="quickPrompt('EMD exemption ke liye kya documents chahiye?')">EMD exemption help</button>
-        <button class="btn btn-sm" onclick="quickPrompt('Bid document mein kya kya hona chahiye?')">Bid document guide</button>
-        <button class="btn btn-sm" onclick="quickPrompt('Not blacklisted certificate ka format kya hai?')">Not blacklisted format</button>
+        <button class="btn btn-sm" onclick="qChat('Best fit tenders kaunse hain?')">Best fit tenders</button>
+        <button class="btn btn-sm" onclick="qChat('Is hafte ki urgent deadlines kya hain?')">Urgent deadlines</button>
+        <button class="btn btn-sm" onclick="qChat('POA kab eStamp pe chahiye hota hai?')">POA guide</button>
+        <button class="btn btn-sm" onclick="qChat('EMD exemption documents list karo')">EMD exemption</button>
+        <button class="btn btn-sm" onclick="qChat('Competitor analysis kaise karein?')">Competitor analysis</button>
+        <button class="btn btn-sm" onclick="qChat('Bid price optimal range kya hona chahiye?')">Optimal bid price</button>
       </div>
     </div>
 
-    <!-- ANALYTICS TAB -->
-    <div class="tab-content" id="content-analytics">
-      <div class="section-title" style="margin-bottom:20px;">Analytics</div>
+    <!-- ===== BIDINTEL ===== -->
+    <div id="page-bidintel" class="hidden">
+      <div class="page-header">
+        <div><div class="page-title">BidIntel 🎯</div><div class="page-sub">Competitive bid analysis — competitors track karo, pricing strategy banao</div></div>
+        <button class="btn btn-gradient" onclick="openBidAnalysis()"><i class="ti ti-plus"></i> New Analysis</button>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card sc-purple"><div class="stat-icon si-purple"><i class="ti ti-trophy"></i></div><div class="stat-label">Win Rate</div><div class="stat-val">0%</div><div class="stat-delta delta-neutral">No data yet</div></div>
+        <div class="stat-card sc-blue"><div class="stat-icon si-blue"><i class="ti ti-chart-bar"></i></div><div class="stat-label">Analyses Done</div><div class="stat-val">0</div><div class="stat-delta delta-neutral">Total</div></div>
+        <div class="stat-card sc-amber"><div class="stat-icon si-amber"><i class="ti ti-users"></i></div><div class="stat-label">Competitors Tracked</div><div class="stat-val">0</div><div class="stat-delta delta-neutral">Database</div></div>
+        <div class="stat-card sc-green"><div class="stat-icon si-green"><i class="ti ti-currency-rupee"></i></div><div class="stat-label">Avg. We Were Above</div><div class="stat-val">0%</div><div class="stat-delta delta-neutral">vs winners</div></div>
+      </div>
+      <div class="page-tabs">
+        <div class="page-tab active" onclick="switchBidTab('analyses',this)"><i class="ti ti-list"></i> My Analyses</div>
+        <div class="page-tab" onclick="switchBidTab('competitors',this)"><i class="ti ti-users"></i> Competitors</div>
+        <div class="page-tab" onclick="switchBidTab('strategy',this)"><i class="ti ti-target"></i> Pre-Bid Strategy</div>
+      </div>
+      <div id="bid-analyses" class="tab-content active">
+        <div class="empty-state"><i class="ti ti-chart-bar"></i><h3>Koi analysis nahi abhi</h3><p>Tender result aane ke baad "New Analysis" karo — AI competitors, pricing, strategy sab batayega</p><button class="btn btn-gradient" onclick="openBidAnalysis()"><i class="ti ti-plus"></i> Pehla Analysis Karo</button></div>
+      </div>
+      <div id="bid-competitors" class="tab-content hidden">
+        <div class="empty-state"><i class="ti ti-users"></i><h3>Competitor database khali hai</h3><p>Bid analysis karne ke baad competitors automatically track honge</p></div>
+      </div>
+      <div id="bid-strategy" class="tab-content hidden">
+        <div class="card" style="background:var(--purple-bg);border-color:var(--purple-border);">
+          <div style="font-size:14px;font-weight:700;color:var(--purple);margin-bottom:12px;"><i class="ti ti-robot"></i> AI Pre-Bid Strategy Generator</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px;">Historical data se AI optimal bid price range suggest karega</div>
+          <div class="form-group"><label class="form-label">Tender Select Karo</label><select class="form-input" id="strategyTender"><option value="">-- Tender choose karo --</option></select></div>
+          <div class="form-group"><label class="form-label">Estimated Tender Value</label><input type="number" class="form-input" id="strategyValue" placeholder="10000000" /></div>
+          <button class="btn btn-purple" style="width:100%;justify-content:center;" onclick="generateStrategy()"><i class="ti ti-wand"></i> AI Strategy Generate Karo</button>
+        </div>
+        <div class="card hidden" id="strategyResult" style="margin-top:16px;">
+          <div class="card-header"><div class="card-title">🎯 AI Bid Strategy</div></div>
+          <div id="strategyContent" style="font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TEAM ===== -->
+    <div id="page-team" class="hidden">
+      <div class="page-header"><div><div class="page-title">Team Management 👥</div><div class="page-sub">Members, roles, tender assignments</div></div><button class="btn btn-gradient" onclick="openInviteModal()"><i class="ti ti-user-plus"></i> Invite Member</button></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">Team Members</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="teamTable"><tr><td colspan="4" style="text-align:center;color:var(--text3);padding:24px;">Koi team member nahi — invite karo!</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS ===== -->
+    <div id="page-analytics" class="hidden">
+      <div class="page-header"><div><div class="page-title">Analytics 📈</div><div class="page-sub">Performance data aur insights</div></div></div>
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Applied</div>
-          <div class="stat-val" id="a-applied">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Won</div>
-          <div class="stat-val" id="a-won">0</div>
-          <div class="stat-delta">Win rate: <span id="a-winrate">0%</span></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Value Won</div>
-          <div class="stat-val" id="a-value">₹0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Docs Generated</div>
-          <div class="stat-val" id="a-docs">0</div>
-          <div class="stat-delta">AI se banaye</div>
-        </div>
+        <div class="stat-card sc-blue"><div class="stat-icon si-blue"><i class="ti ti-send"></i></div><div class="stat-label">Applied</div><div class="stat-val" id="a-applied">0</div></div>
+        <div class="stat-card sc-green"><div class="stat-icon si-green"><i class="ti ti-trophy"></i></div><div class="stat-label">Won</div><div class="stat-val" id="a-won">0</div><div class="stat-delta delta-up">Win rate: <span id="a-wr">0%</span></div></div>
+        <div class="stat-card sc-amber"><div class="stat-icon si-amber"><i class="ti ti-currency-rupee"></i></div><div class="stat-label">Value Won</div><div class="stat-val" id="a-value">₹0</div></div>
+        <div class="stat-card sc-purple"><div class="stat-icon si-purple"><i class="ti ti-file-text"></i></div><div class="stat-label">Docs Generated</div><div class="stat-val" id="a-docs">0</div></div>
       </div>
-      <div class="card" style="margin-top:16px;">
-        <div style="font-size:13px;font-weight:500;margin-bottom:16px;">Sector wise tenders</div>
-        <div id="sectorChart" style="display:flex;flex-direction:column;gap:10px;"></div>
+      <div class="grid-2" style="margin-top:0;">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Sector Performance</div></div>
+          <div class="analytics-bar-wrap" id="sectorBars"><div style="color:var(--text3);font-size:13px;">Data aane ke baad dikhega</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Status Distribution</div></div>
+          <div class="analytics-bar-wrap" id="statusBars"><div style="color:var(--text3);font-size:13px;">Data aane ke baad dikhega</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- PROFILE TAB -->
-    <div class="tab-content" id="content-profile">
-      <div class="section-title" style="margin-bottom:20px;">Company Profile</div>
+    <!-- ===== NOTIFICATIONS ===== -->
+    <div id="page-notifications" class="hidden">
+      <div class="page-header"><div><div class="page-title">Alerts & Notifications 🔔</div><div class="page-sub">Deadlines, assignments, aur updates</div></div></div>
       <div class="card">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="form-group">
-            <label class="form-label">Company Name</label>
-            <input type="text" class="form-input" id="p-company" placeholder="Sharma Constructions Pvt. Ltd." />
+        <div style="display:flex;flex-direction:column;gap:10px;" id="notifList">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius);">
+            <div style="font-size:20px;">⚠️</div><div><div style="font-size:13px;font-weight:600;color:var(--text);">Deadline reminder setup karo</div><div style="font-size:12px;color:var(--text2);margin-top:3px;">Profile complete karo taaki AI sahi alerts bhej sake</div></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Director / Owner Name</label>
-            <input type="text" class="form-input" id="p-director" placeholder="Ramesh Sharma" />
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--radius);">
+            <div style="font-size:20px;">🎉</div><div><div style="font-size:13px;font-weight:600;color:var(--text);">TenderAI Pro mein welcome!</div><div style="font-size:12px;color:var(--text2);margin-top:3px;">Pehla tender upload karo — AI 30 seconds mein analyze karega</div></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">GST Number</label>
-            <input type="text" class="form-input" id="p-gst" placeholder="20XXXXX1234Z" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">PAN Number</label>
-            <input type="text" class="form-input" id="p-pan" placeholder="ABCPS1234Z" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone</label>
-            <input type="text" class="form-input" id="p-phone" placeholder="+91 98765 43210" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Website</label>
-            <input type="text" class="form-input" id="p-website" placeholder="www.company.in" />
-          </div>
-          <div class="form-group" style="grid-column:1/-1;">
-            <label class="form-label">Company Address</label>
-            <input type="text" class="form-input" id="p-address" placeholder="123, Industrial Area, Ranchi, Jharkhand - 834001" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">MSME Number (if any)</label>
-            <input type="text" class="form-input" id="p-msme" placeholder="JH-20-XXXX" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">CIN Number</label>
-            <input type="text" class="form-input" id="p-cin" placeholder="U45200JH2010PTC001234" />
-          </div>
-          <div class="form-group" style="grid-column:1/-1;">
-            <label class="form-label">Past Projects (AI ke liye — jo tenders jite hain)</label>
-            <textarea class="form-input" id="p-projects" rows="3" placeholder="1. Road construction 2km Ranchi 2024 ₹45L&#10;2. School building PWD Bihar 2023 ₹1.2Cr"></textarea>
-          </div>
-          <div class="form-group" style="grid-column:1/-1;">
-            <label class="form-label">Certifications (ISO, BIS, etc.)</label>
-            <textarea class="form-input" id="p-certs" rows="2" placeholder="ISO 9001:2015, MSME Registered, GST Compliant"></textarea>
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:var(--radius);">
+            <div style="font-size:20px;">🤖</div><div><div style="font-size:13px;font-weight:600;color:var(--text);">BidIntel feature available hai</div><div style="font-size:12px;color:var(--text2);margin-top:3px;">Competitor analysis aur optimal bid strategy ke liye try karo</div></div>
           </div>
         </div>
-        <button class="btn btn-dark" onclick="saveProfile()" style="margin-top:4px;"><i class="ti ti-device-floppy"></i> Profile Save Karo</button>
       </div>
     </div>
 
-    <!-- SETTINGS TAB -->
-    <div class="tab-content" id="content-settings">
-      <div class="section-title" style="margin-bottom:20px;">Settings</div>
+    <!-- ===== PROFILE ===== -->
+    <div id="page-profile" class="hidden">
+      <div class="page-header"><div><div class="page-title">Company Profile 🏢</div><div class="page-sub">AI documents mein yeh info use hogi — sab fill karo</div></div></div>
       <div class="card">
-        <div style="font-size:13px;font-weight:500;margin-bottom:16px;">Notification Settings</div>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div>
-              <div style="font-size:13px;font-weight:500;">Deadline Email Alert</div>
-              <div style="font-size:12px;color:var(--text3);">7 din, 3 din, 1 din pehle email</div>
-            </div>
-            <input type="checkbox" checked style="width:18px;height:18px;" />
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Company Name</label><input type="text" class="form-input" id="p-company" placeholder="Sharma Constructions Pvt. Ltd."/></div>
+          <div class="form-group"><label class="form-label">Director / Owner</label><input type="text" class="form-input" id="p-director" placeholder="Ramesh Sharma"/></div>
+          <div class="form-group"><label class="form-label">Director Designation</label><input type="text" class="form-input" id="p-designation" placeholder="Managing Director"/></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="text" class="form-input" id="p-phone" placeholder="+91 98765 43210"/></div>
+          <div class="form-group"><label class="form-label">GST Number</label><input type="text" class="form-input" id="p-gst" placeholder="20XXXXX1234Z"/></div>
+          <div class="form-group"><label class="form-label">PAN Number</label><input type="text" class="form-input" id="p-pan" placeholder="ABCPS1234Z"/></div>
+          <div class="form-group"><label class="form-label">CIN Number</label><input type="text" class="form-input" id="p-cin" placeholder="U45200JH2010PTC001234"/></div>
+          <div class="form-group"><label class="form-label">MSME / Udyam Number</label><input type="text" class="form-input" id="p-msme" placeholder="UDYAM-JH-20-0007450"/></div>
+          <div class="form-group"><label class="form-label">Website</label><input type="text" class="form-input" id="p-website" placeholder="www.company.in"/></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="text" class="form-input" id="p-email" placeholder="info@company.com"/></div>
+          <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Company Address</label><input type="text" class="form-input" id="p-address" placeholder="123, Industrial Area, Ranchi, Jharkhand - 834001"/></div>
+          <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Past Projects (AI ke liye — tender wins)</label><textarea class="form-input" id="p-projects" rows="3" placeholder="1. Road construction 2km Ranchi 2024 ₹45L&#10;2. School building PWD Bihar 2023 ₹1.2Cr&#10;3. CCTV Installation Smart City 2023 ₹85L"></textarea></div>
+          <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Certifications</label><textarea class="form-input" id="p-certs" rows="2" placeholder="ISO 9001:2015, MSME Registered, GST Compliant, BIS Certified"></textarea></div>
+        </div>
+        <button class="btn btn-gradient" onclick="saveProfile()" style="margin-top:4px;"><i class="ti ti-device-floppy"></i> Profile Save Karo</button>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div id="page-settings" class="hidden">
+      <div class="page-header"><div><div class="page-title">Settings ⚙️</div></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Notification Settings</div></div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:13px;font-weight:600;">Deadline Email Alert</div><div style="font-size:12px;color:var(--text2);">7 din, 3 din, 1 din pehle</div></div><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--blue);"/></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:13px;font-weight:600;">Team Assignment Alert</div><div style="font-size:12px;color:var(--text2);">Jab tender assign ho</div></div><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--blue);"/></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:13px;font-weight:600;">WhatsApp Alert</div><div style="font-size:12px;color:var(--text2);">Deadline reminder WhatsApp pe</div></div><input type="checkbox" style="width:18px;height:18px;accent-color:var(--blue);"/></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:13px;font-weight:600;">BidIntel Weekly Digest</div><div style="font-size:12px;color:var(--text2);">Win rate aur competitor updates</div></div><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--blue);"/></div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div>
-              <div style="font-size:13px;font-weight:500;">Team Assignment Alert</div>
-              <div style="font-size:12px;color:var(--text3);">Jab tender assign ho</div>
-            </div>
-            <input type="checkbox" checked style="width:18px;height:18px;" />
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Subscription Plan</div></div>
+          <div style="background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--radius);padding:16px;margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;color:var(--blue);">Trial Plan</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">14 din free — sab features available</div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div>
-              <div style="font-size:13px;font-weight:500;">New Tender Alert</div>
-              <div style="font-size:12px;color:var(--text3);">Sector mein naya tender aaye</div>
-            </div>
-            <input type="checkbox" style="width:18px;height:18px;" />
+          <div style="font-size:12px;color:var(--text2);margin-bottom:14px;">Trial ke baad upgrade karo:</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:600;">Basic</div><div style="font-size:11px;color:var(--text2);">1 user · 10 tenders</div></div><div style="font-size:14px;font-weight:700;color:var(--green);">₹499/mo</div></div>
+            <div style="background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:600;color:var(--purple);">Pro ⭐</div><div style="font-size:11px;color:var(--text2);">5 users · Unlimited · BidIntel</div></div><div style="font-size:14px;font-weight:700;color:var(--purple);">₹1,499/mo</div></div>
+            <div style="background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:600;color:var(--amber);">Enterprise</div><div style="font-size:11px;color:var(--text2);">Unlimited · API · White-label</div></div><div style="font-size:14px;font-weight:700;color:var(--amber);">₹3,999/mo</div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- NOTIFICATIONS TAB -->
-    <div class="tab-content" id="content-notifications">
-      <div class="section-title" style="margin-bottom:20px;">Notifications</div>
-      <div class="card">
-        <div class="empty-state">
-          <i class="ti ti-bell"></i>
-          <h3>Koi notification nahi</h3>
-          <p>Deadlines aur assignments ke alerts yahan dikhenge</p>
-        </div>
-      </div>
-    </div>
+  </div><!-- end page-content -->
+</div><!-- end main-area -->
+</div><!-- end app -->
 
-  </div>
-</div>
-
-<!-- ============ TENDER DETAIL MODAL ============ -->
+<!-- ===== TENDER DETAIL MODAL ===== -->
 <div class="modal-overlay" id="tenderModal">
   <div class="modal" style="width:700px;">
-    <div class="modal-head">
-      <div class="modal-title" id="modalTenderTitle">Tender Details</div>
-      <button class="modal-close" onclick="closeModal('tenderModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="modalTenderContent"></div>
+    <div class="modal-head"><div class="modal-title" id="tModalTitle">Tender Detail</div><button class="modal-close" onclick="closeModal('tenderModal')"><i class="ti ti-x"></i></button></div>
+    <div id="tModalContent"></div>
   </div>
 </div>
 
-<!-- ============ INVITE MODAL ============ -->
+<!-- ===== INVITE MODAL ===== -->
 <div class="modal-overlay" id="inviteModal">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Team Member Invite Karo</div>
-      <button class="modal-close" onclick="closeModal('inviteModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Email Address</label>
-      <input type="email" class="form-input" id="inviteEmail" placeholder="member@company.com" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Role</label>
-      <select class="form-input" id="inviteRole">
-        <option value="member">Member</option>
-        <option value="manager">Manager</option>
-        <option value="admin">Admin</option>
-      </select>
-    </div>
-    <button class="btn btn-dark" style="width:100%;" onclick="inviteMember()"><i class="ti ti-send"></i> Invite Bhejo</button>
+    <div class="modal-head"><div class="modal-title">Team Member Invite Karo</div><button class="modal-close" onclick="closeModal('inviteModal')"><i class="ti ti-x"></i></button></div>
+    <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="inviteEmail" placeholder="member@company.com"/></div>
+    <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="inviteRole"><option value="member">Member</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div>
+    <button class="btn btn-gradient" style="width:100%;justify-content:center;" onclick="inviteMember()"><i class="ti ti-send"></i> Invite Bhejo</button>
   </div>
 </div>
 
-<!-- ============ TOAST ============ -->
+<!-- ===== BID ANALYSIS MODAL ===== -->
+<div class="modal-overlay" id="bidModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">🎯 New Bid Analysis</div><button class="modal-close" onclick="closeModal('bidModal')"><i class="ti ti-x"></i></button></div>
+    <div class="form-group"><label class="form-label">Tender Select Karo</label><select class="form-input" id="bidTender"><option value="">-- Tender choose karo --</option></select></div>
+    <div class="form-group"><label class="form-label">Hamara Bid Amount (₹)</label><input type="number" class="form-input" id="bidOurAmount" placeholder="5000000"/></div>
+    <div class="form-group"><label class="form-label">Hamara Rank</label><input type="number" class="form-input" id="bidOurRank" placeholder="2"/></div>
+    <div class="form-group"><label class="form-label">Total Bidders</label><input type="number" class="form-input" id="bidTotal" placeholder="8"/></div>
+    <div class="form-group"><label class="form-label">Winner ka Naam</label><input type="text" class="form-input" id="bidWinner" placeholder="XYZ Company Pvt. Ltd."/></div>
+    <div class="form-group"><label class="form-label">Winner ka Bid Amount (₹)</label><input type="number" class="form-input" id="bidWinAmount" placeholder="4200000"/></div>
+    <div class="form-group"><label class="form-label">Other Bidders Data (paste karo — name, amount, rank)</label><textarea class="form-input" id="bidRawData" rows="4" placeholder="1. ABC Corp - ₹4.5Cr - Rank 3&#10;2. DEF Ltd - ₹5.2Cr - Rank 4&#10;3. GHI Pvt - ₹6.1Cr - Rank 5"></textarea></div>
+    <button class="btn btn-gradient" style="width:100%;justify-content:center;" onclick="runBidAnalysis()"><i class="ti ti-robot"></i> Claude AI se Analyze Karo</button>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ============ SUPABASE CONFIG ============
-// YAHAN APNI KEYS DAALO
+// ===== CONFIG — APNI KEYS YAHAN DAALO =====
 const SUPABASE_URL = 'https://dtgyfvvprapuryrmgppf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0Z3lmdnZwcmFwdXJ5cm1ncHBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjA4MTgsImV4cCI6MjA5NDkzNjgxOH0.A7i7YVGY-Va2Sn_bXPQomwOxWbBkLT3GVeRPPAebLhI';
-const ANTHROPIC_KEY = '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';
+const AI_PROXY_URL = 'https://dtgyfvvprapuryrmgppf.supabase.co/functions/v1/ai-proxy';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUser = null;
-let currentProfile = null;
-let allTenders = [];
-let selectedDocType = null;
-let selectedFormat = null;
-let generatedContent = '';
+let user = null, profile = null, tenders = [];
+let selDocType = null, selFormat = null, selLetterType = null, selLetterFormat = null;
+let genDocContent = '', genLetterContent = '', pptContent = '';
 
-// ============ AUTH ============
+// ===== AUTH =====
 async function loginWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.href }
-  });
-  if (error) showError(error.message);
+  const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+  if (error) showErr(error.message);
 }
-
 async function loginWithEmail() {
   const email = document.getElementById('loginEmail').value;
   const pass = document.getElementById('loginPassword').value;
-  if (!email || !pass) return showError('Email aur password dono zaroori hain');
+  if (!email || !pass) return showErr('Email aur password dono zaroori hain');
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) showError(error.message);
+  if (error) showErr(error.message);
 }
-
 async function signupWithEmail() {
   const name = document.getElementById('signupName').value;
+  const company = document.getElementById('signupCompany').value;
   const email = document.getElementById('signupEmail').value;
   const pass = document.getElementById('signupPassword').value;
-  if (!name || !email || !pass) return showError('Sab fields zaroori hain');
-  const { error } = await sb.auth.signUp({
-    email, password: pass,
-    options: { data: { full_name: name } }
-  });
-  if (error) showError(error.message);
-  else showError('Email check karo — confirmation link aaya hoga!');
+  if (!name || !email || !pass) return showErr('Sab fields fill karo');
+  const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name, company_name: company } } });
+  if (error) showErr(error.message);
+  else showErr('✅ Email check karo — confirmation link aaya hoga!');
 }
-
-async function logout() {
-  await sb.auth.signOut();
-  document.getElementById('loginPage').style.display = 'flex';
-  document.getElementById('mainApp').style.display = 'none';
+async function logout() { await sb.auth.signOut(); location.reload(); }
+function toggleForm(isSignup) {
+  document.getElementById('loginForm').classList.toggle('hidden', isSignup);
+  document.getElementById('signupForm').classList.toggle('hidden', !isSignup);
 }
-
-function showSignup() {
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('signupForm').style.display = 'block';
-}
-function showLogin() {
-  document.getElementById('loginForm').style.display = 'block';
-  document.getElementById('signupForm').style.display = 'none';
-}
-function showError(msg) {
+function showErr(msg) {
   const el = document.getElementById('loginError');
   el.textContent = msg; el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 5000);
+  setTimeout(() => el.style.display = 'none', 5000);
 }
 
-// ============ APP INIT ============
-async function initApp(user) {
-  currentUser = user;
+// ===== INIT =====
+async function initApp(u) {
+  user = u;
   document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'flex';
-  document.getElementById('mainApp').style.flexDirection = 'column';
-
-  // Set avatar
-  const name = user.user_metadata?.full_name || user.email || 'U';
-  document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
-
-  // Load profile
+  document.getElementById('mainApp').style.display = 'block';
+  const name = u.user_metadata?.full_name || u.email || 'User';
+  const initial = name.charAt(0).toUpperCase();
+  document.getElementById('sidebarAvatar').textContent = initial;
+  document.getElementById('sidebarName').textContent = name.split(' ')[0];
+  document.getElementById('sidebarEmail').textContent = u.email;
   await loadProfile();
   await loadTenders();
-  loadKanban();
+  updateKanban();
   updateAnalytics();
 }
 
-// ============ PROFILE ============
+// ===== PROFILE =====
 async function loadProfile() {
-  const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  const { data } = await sb.from('profiles').select('*').eq('id', user.id).single().catch(() => ({ data: null }));
   if (data) {
-    currentProfile = data;
-    document.getElementById('p-company').value = data.company_name || '';
-    document.getElementById('p-director').value = data.director_name || '';
-    document.getElementById('p-gst').value = data.gst_number || '';
-    document.getElementById('p-pan').value = data.pan_number || '';
-    document.getElementById('p-phone').value = data.phone || '';
-    document.getElementById('p-website').value = data.website || '';
-    document.getElementById('p-address').value = data.company_address || '';
-    document.getElementById('p-msme').value = data.msme_number || '';
-    document.getElementById('p-cin').value = data.cin_number || '';
-    document.getElementById('p-projects').value = data.past_projects || '';
-    document.getElementById('p-certs').value = data.certifications || '';
+    profile = data;
+    const fields = ['company','director','designation','phone','gst','pan','cin','msme','website','email','address','projects','certs'];
+    fields.forEach(f => { const el = document.getElementById('p-' + f); if (el && data[f === 'certs' ? 'certifications' : f === 'projects' ? 'past_projects' : f === 'company' ? 'company_name' : f === 'director' ? 'director_name' : f]) el.value = data[f === 'certs' ? 'certifications' : f === 'projects' ? 'past_projects' : f === 'company' ? 'company_name' : f === 'director' ? 'director_name' : f] || ''; });
   }
 }
-
 async function saveProfile() {
-  const profile = {
-    id: currentUser.id,
-    company_name: document.getElementById('p-company').value,
-    director_name: document.getElementById('p-director').value,
-    gst_number: document.getElementById('p-gst').value,
-    pan_number: document.getElementById('p-pan').value,
-    phone: document.getElementById('p-phone').value,
-    website: document.getElementById('p-website').value,
-    company_address: document.getElementById('p-address').value,
-    msme_number: document.getElementById('p-msme').value,
-    cin_number: document.getElementById('p-cin').value,
-    past_projects: document.getElementById('p-projects').value,
-    certifications: document.getElementById('p-certs').value,
+  const p = {
+    id: user.id, company_name: v('p-company'), director_name: v('p-director'),
+    director_designation: v('p-designation'), phone: v('p-phone'), gst_number: v('p-gst'),
+    pan_number: v('p-pan'), cin_number: v('p-cin'), msme_number: v('p-msme'),
+    website: v('p-website'), company_address: v('p-address'),
+    past_projects: v('p-projects'), certifications: v('p-certs')
   };
-  const { error } = await sb.from('profiles').upsert(profile);
-  if (error) showToast('Error: ' + error.message, 'error');
-  else { currentProfile = { ...currentProfile, ...profile }; showToast('Profile save ho gaya! ✅', 'success'); }
+  const { error } = await sb.from('profiles').upsert(p);
+  if (error) toast('Error: ' + error.message, 'error');
+  else { profile = { ...profile, ...p }; toast('Profile save ho gaya! ✅', 'success'); }
 }
 
-// ============ TENDERS ============
+// ===== TENDERS =====
 async function loadTenders() {
-  const { data, error } = await sb.from('tenders').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-  if (data) {
-    allTenders = data;
-    renderTenders(data);
-    updateStats(data);
-    populateTenderSelect(data);
-  }
+  const { data } = await sb.from('tenders').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).catch(() => ({ data: [] }));
+  tenders = data || [];
+  renderTenders(tenders);
+  updateStats(tenders);
+  populateTenderSelects(tenders);
+  document.getElementById('nb-tenders').textContent = tenders.length;
 }
 
-function renderTenders(tenders) {
-  const dashEl = document.getElementById('dashboardTenders');
-  const allEl = document.getElementById('allTenders');
-  if (tenders.length === 0) {
-    const empty = `<div class="empty-state"><i class="ti ti-file-plus"></i><h3>Koi tender nahi</h3><p>Pehla tender upload karo</p><button class="btn btn-dark" onclick="showTab('upload')"><i class="ti ti-upload"></i> Upload Karo</button></div>`;
-    dashEl.innerHTML = empty; allEl.innerHTML = empty; return;
-  }
-  const html = tenders.map(t => renderTenderCard(t)).join('');
-  dashEl.innerHTML = html;
-  allEl.innerHTML = html;
+function renderTenders(list) {
+  const html = list.length ? list.map(renderCard).join('') : '<div class="empty-state"><i class="ti ti-file-plus"></i><h3>Koi tender nahi</h3><p>Upload karo!</p><button class="btn btn-gradient" onclick="showPage(\'upload\',document.getElementById(\'nav-upload\'))"><i class="ti ti-upload"></i> Upload</button></div>';
+  document.getElementById('dashTenders').innerHTML = html;
+  document.getElementById('allTenders').innerHTML = html;
 }
 
-function renderTenderCard(t) {
+function renderCard(t) {
   const score = t.ai_score || 0;
-  const scoreClass = score >= 70 ? 'score-high' : score >= 50 ? 'score-med' : 'score-low';
-  const scoreLabel = score >= 70 ? 'High fit' : score >= 50 ? 'Medium fit' : 'Low fit';
-  const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('hi-IN') : 'N/A';
-  const daysLeft = t.deadline ? Math.ceil((new Date(t.deadline) - new Date()) / (1000*60*60*24)) : null;
-  const isUrgent = daysLeft !== null && daysLeft <= 3;
-  const statusBadge = `badge-${t.status || 'new'}`;
-  const value = t.value_amount ? '₹' + (t.value_amount >= 10000000 ? (t.value_amount/10000000).toFixed(1)+'Cr' : t.value_amount >= 100000 ? (t.value_amount/100000).toFixed(1)+'L' : t.value_amount) : 'N/A';
-  return `
-    <div class="tender-card" onclick="openTenderModal('${t.id}')">
-      <div class="tender-card-head">
-        <div class="tender-title">${t.title}</div>
-        <div style="display:flex;gap:6px;flex-shrink:0;">
-          ${isUrgent ? '<span class="badge badge-urgent">🔴 Urgent</span>' : ''}
-          <span class="badge ${statusBadge}">${t.status || 'new'}</span>
-        </div>
-      </div>
-      <div class="tender-meta">
-        <span><i class="ti ti-building"></i> ${t.department || 'N/A'}</span>
-        <span><i class="ti ti-calendar"></i> ${deadline}${daysLeft !== null ? ` (${daysLeft} din)` : ''}</span>
-        <span><i class="ti ti-currency-rupee"></i> ${value}</span>
-        ${t.state ? `<span><i class="ti ti-map-pin"></i> ${t.state}</span>` : ''}
-      </div>
-      ${score > 0 ? `
-      <div class="ai-score-bar">
-        <div class="score-circle ${scoreClass}">${score}</div>
-        <div class="score-text"><strong>${scoreLabel}</strong> — ${t.ai_fit_reason || 'AI ne analyze kiya'}</div>
-        <div style="width:80px;"><div class="progress-track"><div class="progress-fill ${score>=70?'green':score>=50?'amber':'red'}" style="width:${score}%"></div></div></div>
-      </div>` : '<div class="ai-analyzing"><i class="ti ti-robot"></i> AI analysis pending<div class="ai-dots"><span></span><span></span><span></span></div></div>'}
-      <div class="tender-actions">
-        <button class="btn btn-sm" onclick="event.stopPropagation();generateDocForTender('${t.id}')"><i class="ti ti-file-text"></i> Document</button>
-        <button class="btn btn-sm" onclick="event.stopPropagation();updateStatus('${t.id}')"><i class="ti ti-refresh"></i> Status</button>
-        <button class="btn btn-sm" onclick="event.stopPropagation();openAIChat('${t.title}')"><i class="ti ti-robot"></i> AI Chat</button>
-      </div>
+  const scoreClass = score >= 70 ? 'high' : score >= 50 ? 'med' : 'low';
+  const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN') : 'N/A';
+  const daysLeft = t.deadline ? Math.ceil((new Date(t.deadline) - new Date()) / 86400000) : null;
+  const urgent = daysLeft !== null && daysLeft <= 3 && daysLeft >= 0;
+  const val = t.value_amount ? '₹' + (t.value_amount >= 10000000 ? (t.value_amount/10000000).toFixed(1)+'Cr' : (t.value_amount/100000).toFixed(1)+'L') : 'N/A';
+  const colors = { new:'blue', in_progress:'purple', review:'amber', submitted:'cyan', won:'green', lost:'red' };
+  const col = colors[t.status] || 'blue';
+  return `<div class="tender-card tc-${col}" onclick="openTender('${t.id}')">
+    <div class="tc-head">
+      <div class="tc-title">${t.title}</div>
+      <div class="tc-badges">${urgent ? '<span class="badge badge-urgent">🔴 Urgent</span>' : ''}<span class="badge badge-${t.status || 'new'}">${t.status || 'New'}</span></div>
+    </div>
+    <div class="tc-meta">
+      <span><i class="ti ti-building"></i>${t.department || 'N/A'}</span>
+      <span><i class="ti ti-calendar"></i>${deadline}${daysLeft !== null ? ' · ' + daysLeft + ' din' : ''}</span>
+      <span><i class="ti ti-currency-rupee"></i>${val}</span>
+      ${t.state ? `<span><i class="ti ti-map-pin"></i>${t.state}</span>` : ''}
+    </div>
+    ${score > 0 ? `<div class="ai-bar">
+      <div class="score-pill sp-${scoreClass}">${score}</div>
+      <div class="ai-text"><strong>${scoreClass === 'high' ? 'High' : scoreClass === 'med' ? 'Medium' : 'Low'} fit</strong> — ${t.ai_fit_reason || 'AI analyzed'}</div>
+      <div class="score-bar-wrap"><div class="score-bar-track"><div class="score-bar-fill sbf-${scoreClass}" style="width:${score}%"></div></div></div>
+    </div>` : '<div class="ai-thinking"><i class="ti ti-robot"></i> AI analysis pending<div class="ai-dots"><span></span><span></span><span></span></div></div>'}
+    <div class="tc-actions">
+      <button class="btn btn-sm btn-blue" onclick="event.stopPropagation();genDocForTender('${t.id}')"><i class="ti ti-file-text"></i> Document</button>
+      <button class="btn btn-sm btn-purple" onclick="event.stopPropagation();openAIChat('${t.title}')"><i class="ti ti-robot"></i> AI</button>
+      <button class="btn btn-sm" onclick="event.stopPropagation();changeTenderStatus('${t.id}')"><i class="ti ti-refresh"></i> Status</button>
+      <button class="btn btn-sm btn-amber" onclick="event.stopPropagation();openBidWithTender('${t.id}')"><i class="ti ti-target"></i> BidIntel</button>
+    </div>
+  </div>`;
+}
+
+function updateStats(list) {
+  document.getElementById('d-total').textContent = list.length;
+  document.getElementById('d-analyzed').textContent = list.filter(t => t.ai_score).length;
+  document.getElementById('d-won').textContent = list.filter(t => t.status === 'won').length;
+  const thisWeek = list.filter(t => { if (!t.deadline) return false; const d = Math.ceil((new Date(t.deadline) - new Date()) / 86400000); return d >= 0 && d <= 7; });
+  document.getElementById('d-deadlines').textContent = thisWeek.length;
+  document.getElementById('d-deadlines-delta').innerHTML = thisWeek.length > 0 ? '<span style="color:var(--red)">⚠️ Dhyan do!</span>' : '<span style="color:var(--green)">✓ Sab theek</span>';
+}
+
+function populateTenderSelects(list) {
+  const html = '<option value="">-- General --</option>' + list.map(t => `<option value="${t.id}">${t.title.substring(0,40)}</option>`).join('');
+  ['docForTender','strategyTender','bidTender'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = html; });
+}
+
+function filterTenders() {
+  const status = document.getElementById('statusFilter').value;
+  const sector = document.getElementById('sectorFilter').value;
+  const filtered = tenders.filter(t => (!status || t.status === status) && (!sector || t.sector === sector));
+  document.getElementById('allTenders').innerHTML = filtered.length ? filtered.map(renderCard).join('') : '<div class="empty-state"><i class="ti ti-filter"></i><h3>Koi result nahi</h3></div>';
+}
+
+function globalSearchFn(q) {
+  const filtered = tenders.filter(t => t.title.toLowerCase().includes(q.toLowerCase()) || (t.department || '').toLowerCase().includes(q.toLowerCase()));
+  renderTenders(filtered);
+}
+
+// ===== TENDER MODAL =====
+async function openTender(id) {
+  const t = tenders.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('tModalTitle').textContent = t.title;
+  const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN') : 'N/A';
+  const val = t.value_amount ? '₹' + (t.value_amount >= 10000000 ? (t.value_amount/10000000).toFixed(1)+'Cr' : (t.value_amount/100000).toFixed(1)+'L') : 'N/A';
+  document.getElementById('tModalContent').innerHTML = `
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div style="background:var(--bg3);padding:12px;border-radius:8px;"><div style="font-size:11px;color:var(--text3);">Department</div><div style="font-size:13px;font-weight:600;">${t.department||'N/A'}</div></div>
+      <div style="background:var(--bg3);padding:12px;border-radius:8px;"><div style="font-size:11px;color:var(--text3);">Value</div><div style="font-size:13px;font-weight:600;">${val}</div></div>
+      <div style="background:var(--bg3);padding:12px;border-radius:8px;"><div style="font-size:11px;color:var(--text3);">Deadline</div><div style="font-size:13px;font-weight:600;">${deadline}</div></div>
+      <div style="background:var(--bg3);padding:12px;border-radius:8px;"><div style="font-size:11px;color:var(--text3);">AI Score</div><div style="font-size:13px;font-weight:600;">${t.ai_score||'Pending'}/100</div></div>
+    </div>
+    ${t.ai_summary ? `<div style="background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:8px;padding:12px;margin-bottom:10px;"><div style="font-size:11px;color:var(--purple);font-weight:700;margin-bottom:4px;">🤖 AI Summary</div><div style="font-size:13px;">${t.ai_summary}</div></div>` : ''}
+    ${t.ai_risks ? `<div style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;padding:12px;margin-bottom:10px;"><div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:4px;">⚠️ Risks</div><div style="font-size:13px;">${t.ai_risks}</div></div>` : ''}
+    ${t.ai_missing_docs ? `<div style="background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:12px;margin-bottom:10px;"><div style="font-size:11px;color:var(--amber);font-weight:700;margin-bottom:4px;">📋 Missing Documents</div><div style="font-size:13px;">${t.ai_missing_docs}</div></div>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <button class="btn btn-blue btn-sm" onclick="genDocForTender('${t.id}');closeModal('tenderModal');"><i class="ti ti-file-text"></i> Document</button>
+      <button class="btn btn-purple btn-sm" onclick="openAIChat('${t.title}');closeModal('tenderModal');"><i class="ti ti-robot"></i> AI Chat</button>
+      <button class="btn btn-amber btn-sm" onclick="openBidWithTender('${t.id}');closeModal('tenderModal');"><i class="ti ti-target"></i> BidIntel</button>
+      <button class="btn btn-sm" onclick="changeTenderStatus('${t.id}')"><i class="ti ti-refresh"></i> Status Change</button>
     </div>`;
+  openModal('tenderModal');
 }
 
-function updateStats(tenders) {
-  document.getElementById('stat-total').textContent = tenders.length;
-  document.getElementById('stat-analyzed').textContent = tenders.filter(t => t.ai_score).length;
-  document.getElementById('stat-won').textContent = tenders.filter(t => t.status === 'won').length;
-  const thisWeek = tenders.filter(t => {
-    if (!t.deadline) return false;
-    const days = Math.ceil((new Date(t.deadline) - new Date()) / (1000*60*60*24));
-    return days >= 0 && days <= 7;
-  });
-  document.getElementById('stat-deadlines').textContent = thisWeek.length;
-  document.getElementById('stat-deadlines-label').textContent = thisWeek.length > 0 ? '⚠️ Dhyan do!' : 'Sab theek';
+async function changeTenderStatus(id) {
+  const status = prompt('New status:\nnew / in_progress / review / submitted / won / lost');
+  if (!status) return;
+  await sb.from('tenders').update({ status }).eq('id', id);
+  toast('Status update ho gaya ✅', 'success');
+  await loadTenders();
+  updateKanban();
+  closeModal('tenderModal');
 }
 
-function populateTenderSelect(tenders) {
-  const sel = document.getElementById('tenderForDoc');
-  sel.innerHTML = '<option value="">-- Koi specific tender nahi --</option>';
-  tenders.forEach(t => {
-    sel.innerHTML += `<option value="${t.id}">${t.title}</option>`;
-  });
-}
-
-// ============ FILE UPLOAD + AI ANALYSIS ============
-async function handleFileUpload(input) {
+// ===== FILE UPLOAD =====
+async function handleUpload(input) {
   const file = input.files[0];
   if (!file) return;
-  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('uploadProg').classList.remove('hidden');
   document.getElementById('uploadFileName').textContent = file.name;
-  animateProgress();
-
-  // Upload to Supabase Storage
-  const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
-  const { data: uploadData, error: uploadError } = await sb.storage.from('tender-files').upload(filePath, file);
-  if (uploadError) { showToast('Upload error: ' + uploadError.message, 'error'); return; }
-
-  // Get public URL
-  const { data: { publicUrl } } = sb.storage.from('tender-files').getPublicUrl(filePath);
-
-  // Read file as text for AI
-  const text = await readFileText(file);
-
-  // AI Analysis
-  const analysis = await analyzeWithAI(text, file.name);
-
-  // Save to database
-  const tenderData = {
-    user_id: currentUser.id,
-    title: analysis.title || file.name.replace(/\.[^/.]+$/, ''),
-    department: analysis.department,
-    state: analysis.state,
-    tender_number: analysis.tender_number,
-    value_amount: analysis.value_amount,
-    deadline: analysis.deadline,
-    file_url: publicUrl,
-    file_name: file.name,
-    status: 'new',
-    ai_score: analysis.fit_score,
-    ai_summary: analysis.summary,
-    ai_risks: analysis.risks,
-    ai_eligibility: analysis.eligibility,
-    ai_missing_docs: analysis.missing_docs,
-    ai_fit_reason: analysis.fit_reason,
-    sector: analysis.sector,
-    source: 'upload'
-  };
-
-  const { data: savedTender, error: saveError } = await sb.from('tenders').insert(tenderData).select().single();
-  if (saveError) { showToast('Save error: ' + saveError.message, 'error'); return; }
-
-  document.getElementById('uploadProgress').style.display = 'none';
-  showToast('Tender upload aur AI analysis complete! ✅', 'success');
+  animBar();
+  const filePath = `${user.id}/${Date.now()}_${file.name}`;
+  const { error: upErr } = await sb.storage.from('tender-files').upload(filePath, file).catch(e => ({ error: e }));
+  if (upErr) { toast('Upload error: ' + upErr.message, 'error'); return; }
+  const text = file.name.includes('.pdf') ? `PDF: ${file.name} Size: ${(file.size/1024).toFixed(0)}KB` : await file.text().catch(() => file.name);
+  const analysis = await callAI(buildAnalysisPrompt(text, file.name), 1200);
+  let parsed = {};
+  try { parsed = JSON.parse(analysis.replace(/```json|```/g,'').trim()); } catch(e) { parsed = { title: file.name, fit_score: 50, summary: 'Manual review karein', fit_reason: 'AI parsing error', sector: 'Other' }; }
+  await sb.from('tenders').insert({ user_id: user.id, title: parsed.title || file.name, department: parsed.department, state: parsed.state, tender_number: parsed.tender_number, value_amount: parsed.value_amount, deadline: parsed.deadline, file_name: file.name, status: 'new', ai_score: parsed.fit_score, ai_summary: parsed.summary, ai_risks: parsed.risks, ai_eligibility: parsed.eligibility, ai_missing_docs: parsed.missing_docs, ai_fit_reason: parsed.fit_reason, sector: parsed.sector, source: 'upload' });
+  document.getElementById('uploadProg').classList.add('hidden');
+  document.getElementById('uploadBar').style.width = '0%';
+  toast('Tender upload aur AI analysis complete! ✅', 'success');
   await loadTenders();
-  showTab('tenders');
+  showPage('tenders', document.getElementById('nav-tenders'));
 }
 
-function readFileText(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result?.substring(0, 8000) || 'File content');
-    reader.onerror = () => resolve('File content unavailable');
-    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
-      resolve(`PDF File: ${file.name} - Size: ${(file.size/1024).toFixed(0)}KB`);
-    } else {
-      reader.readAsText(file);
-    }
-  });
-}
+function buildAnalysisPrompt(text, filename) {
+  const p = profile || {};
+  return `Analyze this tender and respond ONLY with JSON (no other text):
 
-async function analyzeWithAI(text, filename) {
-  const profile = currentProfile;
-  const prompt = `You are a tender analysis expert. Analyze this tender document and respond ONLY with a JSON object.
-
-Tender content: ${text}
+Tender: ${text.substring(0, 6000)}
 Filename: ${filename}
+Company: ${p.company_name || 'Construction company'}
+Past projects: ${p.past_projects || 'Various government projects'}
+MSME: ${p.msme_number ? 'Yes' : 'No'}
 
-Company profile for fit analysis:
-- Company: ${profile?.company_name || 'Construction company'}
-- Past projects: ${profile?.past_projects || 'Various government projects'}
-- Certifications: ${profile?.certifications || 'Standard certifications'}
-- MSME: ${profile?.msme_number ? 'Yes - ' + profile.msme_number : 'No'}
-
-Respond with ONLY this JSON (no other text):
-{
-  "title": "tender title in Hindi/English",
-  "department": "department name",
-  "state": "state name",
-  "tender_number": "tender number if found",
-  "value_amount": 1000000,
-  "deadline": "2026-06-30",
-  "sector": "Infrastructure/IT/Energy/Medical/Other",
-  "fit_score": 75,
-  "fit_reason": "Why this score - 1 line in Hindi",
-  "summary": "2-3 line summary in Hindi",
-  "risks": "Key risks in Hindi",
-  "eligibility": "Key eligibility requirements",
-  "missing_docs": "Documents likely needed"
-}`;
-
-  try {
-    const response = await fetch('https://dtgyfvvprapuryrmgppf.supabase.co/functions/v1/ai-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await response.json();
-    const txt = data.content?.[0]?.text || '{}';
-    const clean = txt.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch (e) {
-    return { title: filename, fit_score: 50, summary: 'AI analysis pending', fit_reason: 'Manual review karein', sector: 'Other' };
-  }
+JSON format:
+{"title":"tender title","department":"dept","state":"state","tender_number":"ref","value_amount":1000000,"deadline":"2026-06-30","sector":"Infrastructure","fit_score":75,"fit_reason":"1 line Hindi/English","summary":"2-3 line summary","risks":"key risks","eligibility":"requirements","missing_docs":"documents needed"}`;
 }
 
-function animateProgress() {
+async function importFromURL() {
+  const url = document.getElementById('importUrl').value;
+  if (!url) return toast('URL dalo pehle', 'error');
+  await sb.from('tenders').insert({ user_id: user.id, title: 'Import: ' + url.substring(0,50), source: url, status: 'new', ai_score: 0 });
+  toast('Import ho gaya! ✅', 'success');
+  await loadTenders();
+  document.getElementById('importUrl').value = '';
+}
+
+function animBar() {
   let w = 0;
   const bar = document.getElementById('uploadBar');
-  const interval = setInterval(() => {
-    w += Math.random() * 15;
-    if (w > 90) { clearInterval(interval); w = 90; }
-    if (bar) bar.style.width = w + '%';
-  }, 400);
+  const iv = setInterval(() => { w += Math.random() * 12; if (w >= 90) { clearInterval(iv); w = 90; } if (bar) bar.style.width = w + '%'; }, 400);
 }
 
-async function importFromUrl() {
-  const url = document.getElementById('tenderUrl').value;
-  if (!url) return showToast('URL dalo pehle', 'error');
-  showToast('URL se import ho raha hai...', '');
-  const tenderData = {
-    user_id: currentUser.id,
-    title: 'Tender from: ' + url.substring(0, 50),
-    source: url,
-    status: 'new',
-    ai_score: 0
-  };
-  const { error } = await sb.from('tenders').insert(tenderData);
-  if (!error) { showToast('Import ho gaya! AI analyze karega ✅', 'success'); await loadTenders(); }
-}
-
-// ============ TENDER MODAL ============
-async function openTenderModal(tenderId) {
-  const tender = allTenders.find(t => t.id === tenderId);
-  if (!tender) return;
-  document.getElementById('modalTenderTitle').textContent = tender.title;
-  const deadline = tender.deadline ? new Date(tender.deadline).toLocaleDateString('hi-IN') : 'N/A';
-  const value = tender.value_amount ? '₹' + (tender.value_amount >= 10000000 ? (tender.value_amount/10000000).toFixed(1)+'Cr' : (tender.value_amount/100000).toFixed(1)+'L') : 'N/A';
-  document.getElementById('modalTenderContent').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div class="card card-sm"><div style="font-size:11px;color:var(--text3);">Department</div><div style="font-size:13px;font-weight:500;">${tender.department||'N/A'}</div></div>
-      <div class="card card-sm"><div style="font-size:11px;color:var(--text3);">Value</div><div style="font-size:13px;font-weight:500;">${value}</div></div>
-      <div class="card card-sm"><div style="font-size:11px;color:var(--text3);">Deadline</div><div style="font-size:13px;font-weight:500;">${deadline}</div></div>
-      <div class="card card-sm"><div style="font-size:11px;color:var(--text3);">AI Score</div><div style="font-size:13px;font-weight:500;">${tender.ai_score||'Pending'}/100</div></div>
-    </div>
-    ${tender.ai_summary ? `<div class="card card-sm" style="margin-bottom:12px;background:var(--purple-bg);border-color:var(--purple-bg);"><div style="font-size:11px;color:var(--purple);font-weight:500;margin-bottom:4px;">🤖 AI Summary</div><div style="font-size:13px;color:var(--text);">${tender.ai_summary}</div></div>` : ''}
-    ${tender.ai_risks ? `<div class="card card-sm" style="margin-bottom:12px;background:var(--red-bg);border-color:var(--red-bg);"><div style="font-size:11px;color:var(--red);font-weight:500;margin-bottom:4px;">⚠️ Risks</div><div style="font-size:13px;color:var(--text);">${tender.ai_risks}</div></div>` : ''}
-    ${tender.ai_missing_docs ? `<div class="card card-sm" style="margin-bottom:12px;background:var(--amber-bg);border-color:var(--amber-bg);"><div style="font-size:11px;color:var(--amber);font-weight:500;margin-bottom:4px;">📋 Missing Documents</div><div style="font-size:13px;color:var(--text);">${tender.ai_missing_docs}</div></div>` : ''}
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-      <button class="btn btn-dark" onclick="generateDocForTender('${tender.id}');closeModal('tenderModal');"><i class="ti ti-file-text"></i> Document Banao</button>
-      <button class="btn" onclick="updateTenderStatus('${tender.id}')"><i class="ti ti-refresh"></i> Status Update</button>
-      <button class="btn" onclick="openAIChat('${tender.title}');closeModal('tenderModal');"><i class="ti ti-robot"></i> AI se Poochho</button>
-    </div>`;
-  document.getElementById('tenderModal').classList.add('open');
-}
-
-async function updateTenderStatus(tenderId) {
-  const status = prompt('New status dalo (new/in_progress/review/submitted/won/lost):');
-  if (!status) return;
-  const { error } = await sb.from('tenders').update({ status }).eq('id', tenderId);
-  if (!error) { showToast('Status update ho gaya ✅', 'success'); await loadTenders(); loadKanban(); closeModal('tenderModal'); }
-}
-
-// ============ DOCUMENT GENERATION ============
-function selectDocType(type, el) {
-  selectedDocType = type;
-  document.querySelectorAll('.doc-card').forEach(c => c.style.border = '1px solid var(--border)');
-  el.style.border = '2px solid var(--accent)';
-
-  const esRequired = ['poa'];
-  const formatNote = esRequired.includes(type) ? '⚠️ POA ke liye eStamp zaroori hota hai' : 'Letterhead ya eStamp — choose karo';
-  document.getElementById('formatNote').textContent = formatNote;
-  document.getElementById('formatSelector').style.display = 'block';
-  document.getElementById('generatedDocArea').style.display = 'none';
-
-  // Auto-select estamp for POA
-  if (esRequired.includes(type)) selectFormat('estamp');
+// ===== DOCUMENT GENERATION =====
+function selectDoc(type, el, isLetter = false) {
+  if (isLetter) {
+    selLetterType = type;
+    document.querySelectorAll('#page-letters .doc-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const esRequired = ['poa'];
+    document.getElementById('letterFormatHint').textContent = esRequired.includes(type) ? '⚠️ Is letter ke liye eStamp zaroori hota hai' : 'Letterhead ya eStamp — choose karo';
+    document.getElementById('letterFormatCard').classList.remove('hidden');
+    document.getElementById('generatedLetterCard').classList.add('hidden');
+    if (esRequired.includes(type)) selectLetterFormat('estamp');
+  } else {
+    selDocType = type;
+    document.querySelectorAll('#page-documents .doc-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('docFormatCard').classList.remove('hidden');
+    document.getElementById('generatedDocCard').classList.add('hidden');
+    document.getElementById('formatHint').textContent = type === 'bid_draft' ? 'Government format mein hoga' : 'Format choose karo';
+  }
 }
 
 function selectFormat(fmt) {
-  selectedFormat = fmt;
-  document.getElementById('lhCard').className = 'format-card' + (fmt === 'letterhead' ? ' selected-lh' : '');
-  document.getElementById('esCard').className = 'format-card' + (fmt === 'estamp' ? ' selected-es' : '');
+  selFormat = fmt;
+  document.getElementById('fcLH').className = 'format-card' + (fmt === 'letterhead' ? ' sel-lh' : '');
+  document.getElementById('fcES').className = 'format-card' + (fmt === 'estamp' ? ' sel-es' : '');
 }
 
-async function generateDocument() {
-  if (!selectedDocType) return showToast('Document type select karo', 'error');
-  if (!selectedFormat) return showToast('Format select karo — Letterhead ya eStamp', 'error');
+function selectLetterFormat(fmt) {
+  selLetterFormat = fmt;
+  document.getElementById('lfcLH').className = 'format-card' + (fmt === 'letterhead' ? ' sel-lh' : '');
+  document.getElementById('lfcES').className = 'format-card' + (fmt === 'estamp' ? ' sel-es' : '');
+}
 
-  showToast('AI document likh raha hai...', '');
-  const tenderId = document.getElementById('tenderForDoc').value;
-  const tender = tenderId ? allTenders.find(t => t.id === tenderId) : null;
-  const p = currentProfile || {};
+async function generateDoc() {
+  if (!selDocType) return toast('Document type select karo', 'error');
+  if (!selFormat) return toast('Format select karo', 'error');
+  toast('AI document likh raha hai...', 'info');
+  const tenderId = document.getElementById('docForTender').value;
+  const tender = tenderId ? tenders.find(t => t.id === tenderId) : null;
+  const content = await callAI(buildDocPrompt(selDocType, selFormat, tender), 2000);
+  genDocContent = content;
+  const names = { cover_letter:'Cover Letter', emd_exemption:'EMD Exemption Letter', fee_exemption:'Tender Fee Exemption', gst_exemption:'GST Exemption Letter', not_blacklisted:'Not Blacklisted Certificate', undertaking:'Undertaking Letter', bid_draft:'Bid Document Draft', company_profile:'Company Profile', experience_cert:'Experience Certificate' };
+  document.getElementById('genDocTitle').textContent = (names[selDocType] || 'Document') + ' — Ready! ✅';
+  document.getElementById('genDocContent').textContent = content;
+  document.getElementById('generatedDocCard').classList.remove('hidden');
+  await sb.from('documents').insert({ user_id: user.id, tender_id: tenderId || null, doc_type: selDocType, doc_format: selFormat, title: names[selDocType], content }).catch(() => {});
+  toast('Document ready hai! ✅', 'success');
+}
 
-  const docNames = {
-    cover_letter: 'Cover Letter',
-    emd_exemption: 'EMD Exemption Letter',
-    poa: 'Power of Attorney',
-    auth_letter: 'Authorization Letter',
-    not_blacklisted: 'Not Blacklisted Certificate',
-    gst_exemption: 'GST Exemption Letter',
-    writeup: 'Technical Write-up',
-    ppt: 'PPT Outline',
-    bid_draft: 'Bid Document Draft'
-  };
+async function generateLetter() {
+  if (!selLetterType) return toast('Letter type select karo', 'error');
+  if (!selLetterFormat) return toast('Format select karo', 'error');
+  toast('AI letter likh raha hai...', 'info');
+  const content = await callAI(buildDocPrompt(selLetterType, selLetterFormat, null), 2000);
+  genLetterContent = content;
+  const names = { poa:'Power of Attorney', auth_letter:'Authorization Letter', not_blacklisted:'Not Blacklisted Certificate', clinical_exemption:'Clinical Establishment Exemption', forwarding_letter:'Forwarding Letter', execution_plan:'Execution Plan' };
+  document.getElementById('genLetterTitle').textContent = (names[selLetterType] || 'Letter') + ' — Ready! ✅';
+  document.getElementById('genLetterContent').textContent = content;
+  document.getElementById('generatedLetterCard').classList.remove('hidden');
+  toast('Letter ready hai! ✅', 'success');
+}
 
-  const format = selectedFormat === 'estamp' ? 'eStamp paper format with certificate number and legal language' : 'Company letterhead format with header and footer';
+function buildDocPrompt(type, format, tender) {
+  const p = profile || {};
+  const fmtDesc = format === 'estamp' ? 'eStamp paper format with certificate number (auto-generate), Stamp Duty: ₹500, Article number, Witness signature lines (Witness 1, Witness 2), QR verification note, legally valid language' : 'Company letterhead format with Ref No, Date, proper salutation, complete body, authorized signatory block, company stamp note';
+  const docNames = { cover_letter:'Cover Letter for Tender Submission', emd_exemption:'EMD Exemption Letter (MSME Registration basis)', fee_exemption:'Tender Processing Fee Exemption Letter', gst_exemption:'GST Exemption Letter (citing correct GST Act section)', not_blacklisted:'Self Declaration — Not Blacklisted / Debarred Certificate', undertaking:'Undertaking Letter', bid_draft:'Technical Bid Document Draft', company_profile:'Company Profile Document', experience_cert:'Experience/Completion Certificate', poa:'Power of Attorney (for tender submission)', auth_letter:'Authorization Letter (Representative authorized to submit tender)', clinical_exemption:'Clinical Establishment Act Exemption Letter', forwarding_letter:'Forwarding Letter for Document Submission', execution_plan:'Project Execution Plan with Timeline' };
+  return `Write a complete, professional ${docNames[type] || type} in ${fmtDesc}.
 
-  const prompt = `You are a tender document expert. Write a professional ${docNames[selectedDocType]} in ${format}.
-
-Company details:
-- Company Name: ${p.company_name || 'Company Name'}
-- Director: ${p.director_name || 'Director Name'}
-- Address: ${p.company_address || 'Company Address'}
-- GST: ${p.gst_number || 'GST Number'}
-- PAN: ${p.pan_number || 'PAN Number'}
-- MSME: ${p.msme_number || 'N/A'}
-- CIN: ${p.cin_number || 'N/A'}
-- Phone: ${p.phone || 'Phone'}
-- Website: ${p.website || 'Website'}
+Company Details:
+- Company: ${p.company_name || '[Company Name]'}
+- Director: ${p.director_name || '[Director Name]'}, ${p.director_designation || 'Managing Director'}
+- Address: ${p.company_address || '[Address]'}
+- GST: ${p.gst_number || '[GST]'} | PAN: ${p.pan_number || '[PAN]'}
+- MSME: ${p.msme_number || 'N/A'} | CIN: ${p.cin_number || 'N/A'}
+- Phone: ${p.phone || '[Phone]'} | Email: ${p.email || '[Email]'}
+- Website: ${p.website || '[Website]'}
 ${tender ? `
-Tender details:
+Tender Details:
 - Tender: ${tender.title}
-- Department: ${tender.department || 'Department'}
-- Tender No: ${tender.tender_number || 'N/A'}
+- Department: ${tender.department || '[Department]'}
+- Ref No: ${tender.tender_number || 'N/A'}
 - Value: ${tender.value_amount ? '₹' + tender.value_amount : 'N/A'}` : ''}
 
-Write a complete, professional document in Hindi/English mix. Include all standard legal language. Date: ${new Date().toLocaleDateString('en-IN')}.
-${selectedFormat === 'estamp' ? 'Include: Certificate No (auto-generate), Stamp Duty: ₹500, Article number, Witness signature lines, QR verify note' : 'Include: Ref No, Date, proper salutation, body, signature block, company stamp note'}
+Date: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
 
-Write ONLY the document content, no explanation.`;
-
-  try {
-    const response = await fetch('https://dtgyfvvprapuryrmgppf.supabase.co/functions/v1/ai-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await response.json();
-    generatedContent = data.content?.[0]?.text || 'Document generation failed';
-
-    document.getElementById('generatedDocTitle').textContent = docNames[selectedDocType] + ' — Ready!';
-    document.getElementById('generatedDocContent').textContent = generatedContent;
-    document.getElementById('generatedDocArea').style.display = 'block';
-
-    // Save to DB
-    await sb.from('documents').insert({
-      user_id: currentUser.id,
-      tender_id: tenderId || null,
-      doc_type: selectedDocType,
-      doc_format: selectedFormat,
-      title: docNames[selectedDocType],
-      content: generatedContent
-    });
-
-    showToast('Document ready hai! ✅', 'success');
-  } catch (e) {
-    showToast('Error: AI se connect nahi ho paya', 'error');
-  }
+Write complete professional document in Hindi-English mix. Include all standard legal language. No placeholders — use actual details provided. Write ONLY the document content.`;
 }
 
-function copyDocument() {
-  navigator.clipboard.writeText(generatedContent);
-  showToast('Copy ho gaya! ✅', 'success');
+function copyDoc() { navigator.clipboard.writeText(genDocContent); toast('Copy ho gaya! ✅', 'success'); }
+function copyLetter() { navigator.clipboard.writeText(genLetterContent); toast('Copy ho gaya! ✅', 'success'); }
+function copyPPT() { navigator.clipboard.writeText(pptContent); toast('Copy ho gaya! ✅', 'success'); }
+
+function downloadDoc() { dlFile(genDocContent, `${(profile?.company_name||'Company').replace(/\s/g,'_')}_${selDocType}_${Date.now()}.txt`); }
+function downloadLetter() { dlFile(genLetterContent, `${(profile?.company_name||'Company').replace(/\s/g,'_')}_${selLetterType}_${Date.now()}.txt`); }
+function downloadPPT() { dlFile(pptContent, `${(profile?.company_name||'Company').replace(/\s/g,'_')}_PPT_Writeup_${Date.now()}.txt`); }
+
+function dlFile(content, name) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  toast('Download ho gaya! ✅', 'success');
 }
 
-function downloadDocument() {
-  const blob = new Blob([generatedContent], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  const company = (currentProfile?.company_name || 'Company').replace(/\s+/g,'_');
-  const docType = selectedDocType.replace(/_/g,'-');
-  const date = new Date().toISOString().split('T')[0];
-  a.download = `${company}_${docType}_${date}.txt`;
-  a.click();
-  showToast('Download ho gaya! ✅', 'success');
+// ===== PPT & WRITEUP =====
+async function generatePPT() {
+  toast('AI PPT outline bana raha hai...', 'info');
+  const p = profile || {};
+  const prompt = `Create a complete PPT presentation outline for pre-bid meeting.
+
+Company: ${p.company_name || 'Company'} | Director: ${p.director_name || 'Director'}
+Past Projects: ${p.past_projects || 'Various government projects'}
+Certifications: ${p.certifications || 'Standard certifications'}
+
+Create 10 slides with full content for each:
+1. Cover Slide (company name, tagline, date)
+2. About Us (company history, registration, team size)
+3. Our Understanding of the Project
+4. Technical Approach & Methodology
+5. Project Team & Key Personnel
+6. Past Experience & Completed Projects
+7. Quality Assurance Plan
+8. Timeline & Milestones (week-by-week)
+9. Why Choose Us (key differentiators)
+10. Thank You & Contact Details
+
+For each slide write the complete content that should appear. Professional, government tender format. Hindi-English mix.`;
+  pptContent = await callAI(prompt, 2500);
+  document.getElementById('pptResultTitle').textContent = 'PPT Outline Ready! ✅';
+  document.getElementById('pptResultContent').textContent = pptContent;
+  document.getElementById('pptResultCard').classList.remove('hidden');
+  toast('PPT outline ready! ✅', 'success');
 }
 
-function generateDocForTender(tenderId) {
-  showTab('documents');
-  document.getElementById('tenderForDoc').value = tenderId;
+async function generateWriteup() {
+  toast('AI technical write-up likh raha hai...', 'info');
+  const p = profile || {};
+  const prompt = `Write a complete Technical Write-up document for government tender submission.
+
+Company: ${p.company_name || 'Company'}
+Director: ${p.director_name || 'Director'} (${p.director_designation || 'MD'})
+Address: ${p.company_address || 'Address'}
+Past Projects: ${p.past_projects || 'Various projects'}
+Certifications: ${p.certifications || 'Standard certs'}
+
+Sections to include:
+1. Executive Summary
+2. Company Overview & Background
+3. Technical Approach & Methodology
+4. Resource Plan (team members and qualifications)
+5. Quality Assurance & Control
+6. Past Experience (relevant completed projects)
+7. Risk Management
+8. Timeline & Deliverables
+9. Compliance Statement
+
+Write complete professional content for each section. Government tender standard format. Hindi-English mix. Formal tone.`;
+  pptContent = await callAI(prompt, 3000);
+  document.getElementById('pptResultTitle').textContent = 'Technical Write-up Ready! ✅';
+  document.getElementById('pptResultContent').textContent = pptContent;
+  document.getElementById('pptResultCard').classList.remove('hidden');
+  toast('Write-up ready! ✅', 'success');
 }
 
-// ============ AI CHAT ============
+// ===== AI CHAT =====
 async function sendChat() {
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
-  appendChat(msg, 'user');
+  appendMsg(msg, 'user');
+  const p = profile || {};
+  const ctx = tenders.length ? `Tenders: ${tenders.slice(0,3).map(t => t.title + '(score:' + t.ai_score + ')').join(', ')}` : '';
+  const reply = await callAI(`You are TenderAI Pro, expert in Indian government tenders. Answer in Hinglish (Hindi-English mix) — helpful, practical, concise (3-5 sentences max).
 
-  const tenderContext = allTenders.length > 0 ?
-    `User ke tenders: ${allTenders.slice(0,3).map(t => t.title + ' (score:' + t.ai_score + ')').join(', ')}` : '';
-  const profile = currentProfile;
+Company: ${p.company_name || 'Company'}
+${ctx}
 
-  const prompt = `You are TenderAI, an expert in Indian government tenders. Answer in Hindi-English mix (Hinglish) — conversational and helpful.
-
-${profile?.company_name ? `Company: ${profile.company_name}` : ''}
-${tenderContext}
-
-User question: ${msg}
-
-Answer in 3-5 sentences maximum. Be specific and practical.`;
-
-  try {
-    const response = await fetch('https://dtgyfvvprapuryrmgppf.supabase.co/functions/v1/ai-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ''Authorization': `Bearer ${SUPABASE_ANON_KEY}`' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 500, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || 'Maafi chahta hun, kuch problem aayi. Dobara try karein.';
-    appendChat(reply, 'ai');
-  } catch (e) {
-    appendChat('Network error — thodi der mein try karein.', 'ai');
-  }
+Question: ${msg}`, 600);
+  appendMsg(reply, 'ai');
 }
 
-function appendChat(msg, type) {
+function appendMsg(msg, type) {
   const el = document.createElement('div');
-  el.className = type === 'ai' ? 'chat-msg-ai' : 'chat-msg-user';
-  el.innerHTML = type === 'ai' ? `<strong>🤖 TenderAI:</strong> ${msg}` : msg;
-  const container = document.getElementById('chatMessages');
-  container.appendChild(el);
-  container.scrollTop = container.scrollHeight;
+  el.className = type === 'ai' ? 'chat-ai' : 'chat-user';
+  el.innerHTML = type === 'ai' ? `<strong>🤖 TenderAI Pro:</strong> ${msg}` : msg;
+  const c = document.getElementById('chatMsgs');
+  c.appendChild(el); c.scrollTop = c.scrollHeight;
 }
 
-function quickPrompt(text) {
-  document.getElementById('chatInput').value = text;
-  sendChat();
+function qChat(text) { document.getElementById('chatInput').value = text; sendChat(); }
+function openAIChat(title) { showPage('ai', document.getElementById('nav-ai')); qChat(`"${title}" tender ke baare mein detail batao`); }
+
+// ===== BIDINTEL =====
+function openBidAnalysis() { openModal('bidModal'); }
+function openBidWithTender(id) { document.getElementById('bidTender').value = id; openModal('bidModal'); }
+
+async function runBidAnalysis() {
+  const tenderId = document.getElementById('bidTender').value;
+  const ourAmt = document.getElementById('bidOurAmount').value;
+  const ourRank = document.getElementById('bidOurRank').value;
+  const total = document.getElementById('bidTotal').value;
+  const winner = document.getElementById('bidWinner').value;
+  const winAmt = document.getElementById('bidWinAmount').value;
+  const rawData = document.getElementById('bidRawData').value;
+  const tender = tenders.find(t => t.id === tenderId);
+  if (!ourAmt) return toast('Hamara bid amount dalo', 'error');
+  toast('Claude AI competitive analysis kar raha hai...', 'info');
+  const variance = ourAmt && winAmt ? (((ourAmt - winAmt) / winAmt) * 100).toFixed(1) : 0;
+  const prompt = `You are a competitive bid intelligence expert. Analyze this tender result data and provide deep insights.
+
+Tender: ${tender ? tender.title : 'Government Tender'}
+Our Bid: ₹${ourAmt} | Our Rank: ${ourRank} of ${total} bidders
+Winner: ${winner} | Winner Bid: ₹${winAmt}
+Our variance from winner: ${variance}% ${variance > 0 ? 'above' : 'below'}
+
+Other Bidders: ${rawData}
+
+Company: ${profile?.company_name || 'Company'}
+
+Provide complete analysis in Hinglish covering:
+1. EXECUTIVE SUMMARY (what happened, key takeaway)
+2. PRICING ANALYSIS (where we went wrong, optimal range)
+3. COMPETITOR INTELLIGENCE (who is ${winner}, their strategy)
+4. WIN/LOSS REASONS (specific reasons why we lost/won)
+5. STRATEGIC RECOMMENDATIONS (what to do next time)
+6. OPTIMAL BID RANGE for similar future tenders
+7. ACTION ITEMS (3-5 specific steps)
+
+Be specific, data-driven, practical. This will help us win next time.`;
+  const analysis = await callAI(prompt, 2000);
+  closeModal('bidModal');
+  document.getElementById('bid-analyses').innerHTML = `<div class="card glow-purple"><div class="card-header"><div><div class="card-title">🎯 Bid Analysis — ${tender ? tender.title.substring(0,40) : 'Recent Tender'}</div><div class="card-sub">${new Date().toLocaleDateString('en-IN')} · Powered by Claude AI</div></div><button class="btn btn-sm btn-blue" onclick="dlFile(this.closest('.card').querySelector('pre').textContent,'BidAnalysis_${Date.now()}.txt')"><i class="ti ti-download"></i></button></div><pre style="font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap;background:var(--bg3);padding:20px;border-radius:var(--radius);border:1px solid var(--purple-border);max-height:600px;overflow-y:auto;">${analysis}</pre></div>`;
+  toast('Bid analysis ready! ✅', 'success');
 }
 
-function openAIChat(tenderTitle) {
-  showTab('ai');
-  document.getElementById('chatInput').value = `"${tenderTitle}" tender ke baare mein batao`;
-  sendChat();
+async function generateStrategy() {
+  const tenderId = document.getElementById('strategyTender').value;
+  const value = document.getElementById('strategyValue').value;
+  const tender = tenders.find(t => t.id === tenderId);
+  toast('AI pricing strategy generate kar raha hai...', 'info');
+  const wonTenders = tenders.filter(t => t.status === 'won');
+  const prompt = `You are a bid pricing strategist. Generate optimal bid strategy for this tender.
+
+Tender: ${tender ? tender.title : 'Government Tender'}
+Estimated Value: ₹${value || 'Unknown'}
+Department: ${tender ? tender.department : 'Government'}
+Company: ${profile?.company_name || 'Company'}
+Past wins: ${wonTenders.length} tenders won
+MSME Status: ${profile?.msme_number ? 'Yes - eligible for benefits' : 'No'}
+
+Provide in Hinglish:
+1. RECOMMENDED BID RANGE (min-max with optimal point)
+2. PRICING STRATEGY (how to price to win)
+3. MSME ADVANTAGE (how to leverage if applicable)
+4. RISK FACTORS (what could go wrong)
+5. CONFIDENCE SCORE (0-100%)
+6. KEY INSIGHTS (3-5 bullet points)
+
+Be specific with numbers and percentages.`;
+  const strategy = await callAI(prompt, 1500);
+  document.getElementById('strategyContent').textContent = strategy;
+  document.getElementById('strategyResult').classList.remove('hidden');
+  toast('Strategy ready! ✅', 'success');
 }
 
-// ============ TEAM / KANBAN ============
-function loadKanban() {
-  const statuses = ['new', 'in_progress', 'review', 'submitted'];
-  const map = { new: 'new', in_progress: 'progress', review: 'review', submitted: 'submitted' };
-  statuses.forEach(s => {
-    const items = allTenders.filter(t => t.status === s);
-    const key = map[s];
-    const el = document.getElementById('kc-' + key);
-    const count = document.getElementById('k-' + key);
-    if (el) el.innerHTML = items.map(t => `<div class="kanban-card" onclick="openTenderModal('${t.id}')"><div class="kanban-card-title">${t.title}</div><div class="kanban-card-meta">${t.department || ''} ${t.deadline ? '· ' + new Date(t.deadline).toLocaleDateString('hi-IN') : ''}</div></div>`).join('') || '<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px;">Koi tender nahi</div>';
-    if (count) count.textContent = items.length;
+// ===== KANBAN =====
+function updateKanban() {
+  const statuses = [{ key: 'new', col: 'new' }, { key: 'in_progress', col: 'progress' }, { key: 'review', col: 'review' }, { key: 'submitted', col: 'submitted' }];
+  statuses.forEach(({ key, col }) => {
+    const items = tenders.filter(t => t.status === key);
+    const el = document.getElementById('kl-' + col);
+    const cnt = document.getElementById('kc-' + col);
+    if (el) el.innerHTML = items.length ? items.map(t => `<div class="kanban-card" onclick="openTender('${t.id}')"><div class="kc-title">${t.title}</div><div class="kc-meta">${t.department || ''} ${t.deadline ? '· ' + new Date(t.deadline).toLocaleDateString('en-IN') : ''}</div><div class="kc-footer"><span class="badge badge-${t.status || 'new'}" style="font-size:10px;">${t.status}</span>${t.ai_score ? `<span style="font-size:11px;font-weight:700;color:${t.ai_score>=70?'var(--green)':t.ai_score>=50?'var(--amber)':'var(--red)'}">${t.ai_score}</span>` : ''}</div></div>`).join('') : '<div style="text-align:center;padding:16px;font-size:12px;color:var(--text3);">Koi tender nahi</div>';
+    if (cnt) cnt.textContent = items.length;
   });
 }
 
-function showInviteModal() {
-  document.getElementById('inviteModal').classList.add('open');
+// ===== ANALYTICS =====
+function updateAnalytics() {
+  const won = tenders.filter(t => t.status === 'won');
+  const applied = tenders.filter(t => ['submitted','won','lost'].includes(t.status));
+  if (document.getElementById('a-applied')) {
+    document.getElementById('a-applied').textContent = applied.length;
+    document.getElementById('a-won').textContent = won.length;
+    document.getElementById('a-wr').textContent = applied.length ? Math.round(won.length/applied.length*100) + '%' : '0%';
+    const val = won.reduce((s,t) => s + (t.value_amount||0), 0);
+    document.getElementById('a-value').textContent = val >= 10000000 ? '₹'+(val/10000000).toFixed(1)+'Cr' : '₹'+(val/100000).toFixed(1)+'L';
+  }
+  const sectors = {}; tenders.forEach(t => { sectors[t.sector||'Other'] = (sectors[t.sector||'Other']||0)+1; });
+  const maxS = Math.max(...Object.values(sectors), 1);
+  const colors = ['pf-blue','pf-green','pf-purple','pf-amber','pf-red'];
+  if (document.getElementById('sectorBars'))
+    document.getElementById('sectorBars').innerHTML = Object.entries(sectors).length ? Object.entries(sectors).map(([s,c],i) => `<div class="analytics-bar-item"><div class="ab-label">${s}</div><div class="ab-track"><div class="ab-fill ${colors[i%colors.length]}" style="width:${c/maxS*100}%"></div></div><div class="ab-val">${c}</div></div>`).join('') : '<div style="color:var(--text3);font-size:13px;">Data nahi abhi</div>';
+  const statuses = {}; tenders.forEach(t => { statuses[t.status||'new'] = (statuses[t.status||'new']||0)+1; });
+  const maxSt = Math.max(...Object.values(statuses), 1);
+  if (document.getElementById('statusBars'))
+    document.getElementById('statusBars').innerHTML = Object.entries(statuses).length ? Object.entries(statuses).map(([s,c],i) => `<div class="analytics-bar-item"><div class="ab-label">${s}</div><div class="ab-track"><div class="ab-fill ${colors[i%colors.length]}" style="width:${c/maxSt*100}%"></div></div><div class="ab-val">${c}</div></div>`).join('') : '<div style="color:var(--text3);font-size:13px;">Data nahi abhi</div>';
 }
 
+// ===== TEAM =====
+function openInviteModal() { openModal('inviteModal'); }
 async function inviteMember() {
   const email = document.getElementById('inviteEmail').value;
   const role = document.getElementById('inviteRole').value;
-  if (!email) return showToast('Email dalo', 'error');
-  const { error } = await sb.from('team_members').insert({
-    org_owner_id: currentUser.id,
-    invited_email: email,
-    role,
-    status: 'pending'
-  });
-  if (!error) { showToast('Invite bhej diya! ✅', 'success'); closeModal('inviteModal'); }
+  if (!email) return toast('Email dalo', 'error');
+  await sb.from('team_members').insert({ org_owner_id: user.id, invited_email: email, role, status: 'pending' }).catch(() => {});
+  toast('Invite bhej diya! ✅', 'success');
+  closeModal('inviteModal');
 }
 
-// ============ ANALYTICS ============
-function updateAnalytics() {
-  const won = allTenders.filter(t => t.status === 'won');
-  const applied = allTenders.filter(t => ['submitted','won','lost'].includes(t.status));
-  document.getElementById('a-applied').textContent = applied.length;
-  document.getElementById('a-won').textContent = won.length;
-  document.getElementById('a-winrate').textContent = applied.length ? Math.round(won.length/applied.length*100)+'%' : '0%';
-  const totalVal = won.reduce((s,t) => s + (t.value_amount||0), 0);
-  document.getElementById('a-value').textContent = totalVal >= 10000000 ? '₹'+(totalVal/10000000).toFixed(1)+'Cr' : '₹'+(totalVal/100000).toFixed(1)+'L';
-
-  // Sector chart
-  const sectors = {};
-  allTenders.forEach(t => { sectors[t.sector||'Other'] = (sectors[t.sector||'Other']||0) + 1; });
-  const max = Math.max(...Object.values(sectors), 1);
-  document.getElementById('sectorChart').innerHTML = Object.entries(sectors).map(([s,c]) => `
-    <div style="display:flex;align-items:center;gap:10px;font-size:12px;">
-      <div style="width:100px;color:var(--text2);">${s}</div>
-      <div style="flex:1;"><div class="progress-track"><div class="progress-fill green" style="width:${c/max*100}%"></div></div></div>
-      <div style="width:20px;font-weight:500;">${c}</div>
-    </div>`).join('');
+function genDocForTender(id) {
+  showPage('documents', document.getElementById('nav-documents'));
+  document.getElementById('docForTender').value = id;
 }
 
-// ============ UI HELPERS ============
-function showTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.tabnav-item').forEach(t => t.classList.remove('active'));
-  const content = document.getElementById('content-' + tab);
-  const tabEl = document.getElementById('tab-' + tab);
-  if (content) content.classList.add('active');
-  if (tabEl) tabEl.classList.add('active');
-  if (tab === 'analytics') updateAnalytics();
-  if (tab === 'team') loadKanban();
+// ===== AI CALL =====
+async function callAI(prompt, maxTokens = 1000) {
+  try {
+    const res = await fetch(AI_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ prompt, max_tokens: maxTokens })
+    });
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+    return data.content?.[0]?.text || data.error || 'AI se jawab nahi aaya';
+  } catch (e) {
+    console.error('AI error:', e);
+    return 'AI se connect nahi ho paya. Network check karo ya thodi der mein try karo.';
+  }
 }
 
-function filterTenders(val) {
-  const v = val.toLowerCase();
-  const filtered = allTenders.filter(t => t.title.toLowerCase().includes(v) || (t.department||'').toLowerCase().includes(v));
-  renderTenders(filtered);
+// ===== BID TAB =====
+function switchBidTab(tab, el) {
+  document.querySelectorAll('#page-bidintel .tab-content').forEach(c => c.classList.add('hidden'));
+  document.querySelectorAll('#page-bidintel .page-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('bid-' + tab).classList.remove('hidden');
+  document.getElementById('bid-' + tab).classList.add('active');
+  el.classList.add('active');
 }
 
-function filterByStatus() {
-  const status = document.getElementById('statusFilter').value;
-  const filtered = status ? allTenders.filter(t => t.status === status) : allTenders;
-  document.getElementById('allTenders').innerHTML = filtered.map(t => renderTenderCard(t)).join('') || '<div class="empty-state"><i class="ti ti-filter"></i><h3>Koi result nahi</h3></div>';
-}
-
-function toggleUserMenu() {
-  const menu = document.getElementById('userMenu');
-  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+// ===== UI HELPERS =====
+function showPage(page, navEl) {
+  document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.remove('hidden');
+  if (navEl) navEl.classList.add('active');
+  if (page === 'analytics') updateAnalytics();
+  if (page === 'kanban') updateKanban();
 }
 
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function showToast(msg, type = '') {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.className = 'toast show' + (type ? ' ' + type : '');
-  setTimeout(() => { toast.className = 'toast'; }, 3500);
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show toast-${type}`;
+  setTimeout(() => el.className = 'toast', 3500);
 }
 
+function toggleDark() {
+  document.documentElement.style.filter = document.documentElement.style.filter ? '' : 'invert(1) hue-rotate(180deg)';
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ===== DRAG & DROP =====
+const uz = document.getElementById('uploadZone');
+if (uz) {
+  uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('drag'); });
+  uz.addEventListener('dragleave', () => uz.classList.remove('drag'));
+  uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) { const dt = new DataTransfer(); dt.items.add(f); document.getElementById('fileInput').files = dt.files; handleUpload(document.getElementById('fileInput')); } });
+}
+
+// ===== CLICK OUTSIDE =====
 document.addEventListener('click', e => {
-  if (!e.target.closest('.relative')) document.getElementById('userMenu').style.display = 'none';
-  if (e.target === document.getElementById('tenderModal')) closeModal('tenderModal');
-  if (e.target === document.getElementById('inviteModal')) closeModal('inviteModal');
+  if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
 });
 
-// Drag and drop upload
-const uploadZone = document.getElementById('uploadZone');
-if (uploadZone) {
-  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.borderColor = 'var(--accent)'; });
-  uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor = ''; });
-  uploadZone.addEventListener('drop', e => {
-    e.preventDefault();
-    uploadZone.style.borderColor = '';
-    const file = e.dataTransfer.files[0];
-    if (file) { const dt = new DataTransfer(); dt.items.add(file); document.getElementById('fileInput').files = dt.files; handleFileUpload(document.getElementById('fileInput')); }
-  });
-}
-
-// ============ AUTH STATE ============
+// ===== AUTH STATE =====
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    await initApp(session.user);
-  } else {
-    document.getElementById('loginPage').style.display = 'flex';
-    document.getElementById('mainApp').style.display = 'none';
-  }
+  if (session?.user) await initApp(session.user);
+  else { document.getElementById('loginPage').style.display = 'flex'; document.getElementById('mainApp').style.display = 'none'; }
 });
+
+// Initial page class fix
+document.querySelectorAll('[id^="page-"]').forEach((p, i) => { if (i > 0) p.classList.add('hidden'); });
 </script>
 </body>
 </html>
